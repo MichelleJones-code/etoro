@@ -2,6 +2,8 @@ import HeroSection from '@/components/sections/HeroSection'
 import ClubSubscriptionSection from '@/components/sections/ClubSubscriptionSection'
 import EarnInterestSection from '@/components/sections/EarnInterestSection'
 import DiversifySection from '@/components/sections/DiversifySection'
+import FeaturesSection from '@/components/sections/FeaturesSection'
+import TrustSection from '@/components/sections/TrustSection'
 
 export default function Home() {
   return (
@@ -17,6 +19,12 @@ export default function Home() {
 
       {/* Diversify Portfolio Section */}
       <DiversifySection />
+
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* Trust Section */}
+      <TrustSection />
     </main>
   )
 }
