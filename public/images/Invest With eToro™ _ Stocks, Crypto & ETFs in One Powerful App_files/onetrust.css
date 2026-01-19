@@ -1,0 +1,805 @@
+body {
+    --cookie-setting-right-offset: 0;
+    --cookie-setting-bottom-offset: 100px;
+}
+
+@media only screen and (width: 1024px) {
+    body {
+        --cookie-setting-right-offset: 20px;
+        --cookie-setting-bottom-offset: 185px;
+    }
+}
+
+@media only screen and (min-width: 1025px) {
+    body {
+        --cookie-setting-right-offset: 20px;
+        --cookie-setting-bottom-offset: 20px;
+    }
+}
+
+/* body selector for overwriting original styles */
+.acsb-trigger {
+    z-index: 999999 !important; /* it's important to show Accessibe button below Cookie Consent Block */
+}
+
+.ot-floating-button {
+    display: none !important;
+}
+
+body #onetrust-consent-sdk #onetrust-banner-sdk {
+    background-color: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.12);
+    z-index: 100000; /* to be below the AccessiBe icon */
+}
+
+body #onetrust-banner-sdk #onetrust-policy-text,
+body #onetrust-banner-sdk #onetrust-policy-text a {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #000021!important;
+}
+
+body #onetrust-banner-sdk:focus {
+    outline: none;
+}
+
+body #onetrust-banner-sdk .ot-sdk-container {
+    width: 100%;
+    padding: 0;
+}
+
+body #onetrust-banner-sdk #onetrust-accept-btn-handler,
+body #onetrust-banner-sdk #onetrust-reject-all-handler,
+body #onetrust-banner-sdk #onetrust-pc-btn-handler {
+    width: auto;
+    min-width: unset;
+    margin-top: 0;
+    margin-right: 0;
+    letter-spacing: unset;
+}
+
+
+body #onetrust-banner-sdk .ot-sdk-button,
+body #onetrust-banner-sdk button,
+body #onetrust-consent-sdk .ot-sdk-button,
+body #onetrust-consent-sdk button,
+body #ot-sdk-cookie-policy .ot-sdk-button,
+body #ot-sdk-cookie-policy button {
+    border-radius: 5px;
+}
+
+body #onetrust-consent-sdk #onetrust-banner-sdk *:focus,
+body #onetrust-consent-sdk #onetrust-banner-sdk:focus {
+    outline: none;
+    border-color: #6aac0e;
+}
+
+body #onetrust-banner-sdk #onetrust-policy {
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    max-width: 718px;
+    height: auto;
+}
+
+body #onetrust-banner-sdk #onetrust-policy-text a {
+    margin-left: 0;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk #ot-category-title {
+    font-weight: 300;
+    display: none;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout .ot-cat-header {
+    font-weight: 300;
+    line-height: 1.5;
+    color: #2C2C2C;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-tgl input:focus + .ot-switch,
+body #onetrust-consent-sdk .ot-switch .ot-switch-nob,
+body #onetrust-consent-sdk .ot-switch .ot-switch-nob:before,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-checkbox input[type="checkbox"]:focus + label::before,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-chkbox input[type="checkbox"]:focus + label::before {
+    outline: none;
+}
+
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-pc-footer-logo {
+    display: none !important;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-pc-header {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-pc-logo {
+    background: none !important;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-pc-logo::after {
+    content: attr( aria-label );
+    font: 300 20px/1.5em "Open Sans", sans-serif;
+    display: block;
+    text-align: center;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk #close-pc-btn-handler.ot-close-icon {
+    left: 0;
+    background: url("data:image/svg+xml,%3Csvg width='8' height='12' viewBox='0 0 8 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.41 10.59L2.83 6L7.41 1.41L6 0L0 6L6 12L7.41 10.59Z' fill='%23323232'/%3E%3C/svg%3E%0A") center center no-repeat;
+    background-size: 8px 12px;
+}
+
+body #onetrust-banner-sdk #onetrust-pc-btn-handler,
+body #onetrust-banner-sdk #onetrust-reject-all-handler,
+body #onetrust-consent-sdk #onetrust-accept-btn-handler,
+body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 10px 28px 11px;
+    border-radius: 22.5px;
+    font-size: 16px;
+    line-height: 22px;
+    transition: all 0.3s ease-in-out;
+}
+
+body #onetrust-banner-sdk .has-reject-all-button #onetrust-pc-btn-handler.cookie-setting-link {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center !important;
+}
+
+body #onetrust-banner-sdk #onetrust-pc-btn-handler,
+body #onetrust-banner-sdk #onetrust-reject-all-handler {
+    font-weight: 400;
+}
+
+body #onetrust-consent-sdk #onetrust-accept-btn-handler {
+    font-weight: 500;
+}
+
+#onetrust-consent-sdk #onetrust-pc-sdk button:not(#clear-filters-handler):not(.ot-close-icon):not(#filter-btn-handler):not(.ot-remove-objection-handler):not(.ot-obj-leg-btn-handler):not([aria-expanded]):not(.ot-link-btn),
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-active-leg-btn {
+    font-weight: 500;
+    background-color: #000021 !important;
+    border-color: #000021 !important;
+    border-radius: 22.5px !important;
+    transition: all 0.3s ease-in-out;
+}
+
+#onetrust-consent-sdk #onetrust-pc-sdk button:not(#clear-filters-handler):not(.ot-close-icon):not(#filter-btn-handler):not(.ot-remove-objection-handler):not(.ot-obj-leg-btn-handler):not([aria-expanded]):not(.ot-link-btn):hover,
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-active-leg-btn:hover {
+    color: #000021 !important;
+    background-color: transparent !important;
+    opacity: unset !important;
+}
+
+#onetrust-consent-sdk #onetrust-pc-sdk button:not(#clear-filters-handler):not(.ot-close-icon):not(#filter-btn-handler):not(.ot-remove-objection-handler):not(.ot-obj-leg-btn-handler):not([aria-expanded]):not(.ot-link-btn):active,
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-active-leg-btn:active,
+#onetrust-consent-sdk #onetrust-pc-sdk button:not(#clear-filters-handler):not(.ot-close-icon):not(#filter-btn-handler):not(.ot-remove-objection-handler):not(.ot-obj-leg-btn-handler):not([aria-expanded]):not(.ot-link-btn):focus,
+#onetrust-consent-sdk #onetrust-pc-sdk .ot-leg-btn-container .ot-active-leg-btn:focus {
+    color: #66667A !important;
+    border: 1px solid #66667A !important;
+}
+
+body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link,
+body #onetrust-banner-sdk #onetrust-reject-all-handler {
+    text-decoration: none;
+    color: #000021;
+    border: 1px solid #000021;
+    background-color: transparent;
+}
+
+body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link:hover,
+body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link:active,
+body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link:focus-visible,
+body #onetrust-banner-sdk #onetrust-reject-all-handler:hover,
+body #onetrust-banner-sdk #onetrust-reject-all-handler:active,
+body #onetrust-banner-sdk #onetrust-reject-all-handler:focus-visible {
+    opacity: 1 !important;
+    color: #fff;
+    background-color: #000021;
+}
+
+body #onetrust-banner-sdk .has-reject-all-button #onetrust-pc-btn-handler.cookie-setting-link {
+    border: none;
+    text-decoration: underline;
+    order: 3;
+    padding: 0;
+    line-height: 26px;
+}
+
+body #onetrust-banner-sdk .has-reject-all-button #onetrust-pc-btn-handler.cookie-setting-link:hover {
+    background-color: transparent;
+    color: #000021;
+    text-decoration: none;
+}
+
+body #onetrust-banner-sdk .has-reject-all-button #onetrust-reject-all-handler {
+    order: 2;
+}
+
+body #onetrust-consent-sdk #onetrust-accept-btn-handler {
+    color: #fff;
+    background-color: #000021;
+}
+
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:hover {
+    opacity: 1;
+}
+
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:hover,
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:active,
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:focus {
+    color: #000021;
+    border: 1px solid #000021;
+    background-color: transparent;
+}
+
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:active,
+body #onetrust-consent-sdk #onetrust-accept-btn-handler:focus {
+    opacity: 0.6 !important;
+}
+
+body #onetrust-consent-sdk #onetrust-banner-sdk a[href],
+body #onetrust-consent-sdk #onetrust-banner-sdk a[href] font,
+body #onetrust-consent-sdk #onetrust-banner-sdk .ot-link-btn {
+    color: #000021;
+}
+
+body #onetrust-banner-sdk .ot-sdk-row {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    max-width: 1176px;
+    margin: 0 auto;
+    padding: 10px 16px 16px;
+}
+
+body #onetrust-banner-sdk .ot-sdk-row:after {
+    display: none;
+}
+
+#onetrust-banner-sdk .onetrust-close-btn-ui {
+    background-size: 10px !important;
+}
+
+body #onetrust-banner-sdk #onetrust-close-btn-container {
+    position: absolute;
+    height: 40px;
+}
+
+body #onetrust-banner-sdk #onetrust-close-btn-container,
+body #onetrust-banner-sdk #onetrust-close-btn-container button {
+    top: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+}
+
+body.rtl #onetrust-banner-sdk #onetrust-close-btn-container,
+body.rtl #onetrust-banner-sdk #onetrust-close-btn-container button,
+body.ar-ae #onetrust-banner-sdk #onetrust-close-btn-container,
+body.ar-ae #onetrust-banner-sdk #onetrust-close-btn-container button {
+    right: auto !important;
+    left: 0 !important;
+}
+
+body #onetrust-banner-sdk .ot-close-icon {
+    top: 0;
+    right: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.00012 1L9.00012 9' stroke='%23000021' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M8.99988 1L0.999878 9' stroke='%23000021' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E%0A") !important;
+}
+
+body #onetrust-pc-sdk .ot-accordion-layout .ot-acc-hdr {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+body #onetrust-pc-sdk .ot-accordion-layout .ot-acc-grpdesc {
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-switch {
+    height: 22px;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk *:focus,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-vlst-cntr > a:focus,
+body #onetrust-consent-sdk #onetrust-pc-sdk *:focus-visible,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-vlst-cntr > a:focus-visible {
+    outline: none !important;
+    border: none !important;
+}
+
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-switch-nob {
+    background-color: #BABABA;
+    border: none !important;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-switch:hover .ot-switch-nob,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-switch:focus .ot-switch-nob {
+    background-color: #777;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-switch-nob:before {
+    background-color: #fff;
+    height: 27px;
+    width: 27px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    bottom: -3px;
+    left: 0;
+    -webkit-transition: transform .4s;
+    transition: transform .4s;
+}
+
+body #onetrust-pc-sdk.otPcCenter[dir=rtl] .ot-switch-nob:before {
+    right: 0;
+    left: unset;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob {
+    background-color: #3FB923 !important;
+    border-color: #3FB923;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob:before {
+    background:#fff url("data:image/svg+xml,%3Csvg width='14' height='11' viewBox='0 0 14 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.7498 8.1502L1.5998 5.0002L0.549805 6.05019L4.7498 10.2502L13.7498 1.2502L12.6998 0.200195L4.7498 8.1502Z' fill='%233FB923'/%3E%3C/svg%3E%0A") center center no-repeat;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout .ot-acc-hdr {
+    display: flex;
+    align-items: center;
+}
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-always-active-group .ot-cat-header,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout .ot-cat-header {
+    width: auto;
+    flex-grow: 1;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout h4~.ot-tgl,
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout h4~.ot-always-active {
+    position: static;
+    transform:none;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout h4~.ot-always-active {
+    transition: all .2s ease-in 0s;
+    -webkit-transition: all .2s ease-in 0s;
+    border-radius: 20px;
+    background-color: #EDEDED;
+    border: none !important;
+    position: relative;
+    width: 45px;
+    height: 25px;
+    color: #EDEDED;
+    text-indent: -800px;
+    right: 0;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout h4~.ot-always-active:before {
+    position: absolute;
+    content: "";
+    background: #fff url("data:image/svg+xml,%3Csvg width='14' height='11' viewBox='0 0 14 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.7498 8.1502L1.5998 5.0002L0.549805 6.05019L4.7498 10.2502L13.7498 1.2502L12.6998 0.200195L4.7498 8.1502Z' fill='%23CBCBCB'/%3E%3C/svg%3E%0A") center center no-repeat;
+    height: 27px;
+    width: 27px;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
+    bottom: -1px;
+    right: 0;
+    -webkit-transition: transform .4s;
+    transition: transform .4s;
+    border-radius: 20px;
+}
+
+#onetrust-pc-sdk .ot-plus-minus {
+    transition: all 0.2s ease;
+}
+
+body #onetrust-pc-sdk .ot-plus-minus span {
+    background: #555;
+}
+
+body #onetrust-pc-sdk .ot-plus-minus span:first-of-type {
+    transform: rotate(45deg);
+    left: 75%;
+}
+
+body.rtl #onetrust-pc-sdk .ot-plus-minus span:first-of-type {
+    right: 15%;
+}
+
+body #onetrust-pc-sdk .ot-plus-minus span:last-of-type {
+    transform: rotate(45deg);
+}
+
+body #onetrust-pc-sdk button[aria-expanded=true]~.ot-acc-hdr .ot-plus-minus {
+    transform: scale(1, -1);
+}
+
+
+body #onetrust-pc-sdk button[aria-expanded=true]~.ot-acc-hdr .ot-plus-minus span:first-of-type {
+    transform: rotate(45deg);
+}
+
+body #onetrust-pc-sdk button[aria-expanded=true]~.ot-acc-hdr .ot-plus-minus span:last-of-type {
+    transform: rotate(45deg);
+    left: 25%;
+    right: 25%;
+}
+
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout.ot-cat-item:first-of-type {
+    border-top: none;
+}
+
+body #onetrust-consent-sdk #onetrust-pc-sdk .ot-accordion-layout.ot-cat-item {
+    border: none;
+    border-bottom: 1px solid #EDEDED;
+}
+
+body #onetrust-banner-sdk #onetrust-button-group {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    gap: 12px;
+}
+
+#otet-short-text,
+#otet-long-text {
+    color: #000021 !important;
+}
+
+#otet-short-text {
+    display: none;
+}
+
+#onetrust-consent-sdk #onetrust-group-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+}
+
+#otet-manage-settings {
+    cursor: pointer;
+}
+
+body #ot-sdk-btn.ot-sdk-show-settings,
+body #ot-sdk-btn.optanon-show-settings {
+    position: fixed;
+    right: var(--cookie-setting-right-offset);
+    bottom: var(--cookie-setting-bottom-offset);
+    width: 30px!important;
+    height: 30px!important;
+    font-size: 0!important;
+    border: none!important;
+    background: #f7f7f7 url("data:image/svg+xml,%3Csvg width='45' height='40' viewBox='0 0 45 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M38.9512 21.2615L39.9491 21.3269L40.0424 19.9039L38.6727 20.3011L38.9512 21.2615ZM24.265 1.48231L25.1435 1.96014L25.773 0.802776L24.489 0.507714L24.265 1.48231ZM26.993 8.72447L27.7677 9.3568L28.6541 8.27082L27.3388 7.78614L26.993 8.72447ZM26.8875 8.85821L26.0925 8.25154L26.0925 8.25155L26.8875 8.85821ZM27.8507 16.028L27.2441 16.823L27.2441 16.823L27.8507 16.028ZM32.4396 16.8568L33.4346 16.7571L33.3134 15.5477L32.15 15.8997L32.4396 16.8568ZM36.3518 21.324L36.1213 22.2971V22.2971L36.3518 21.324ZM37.9534 21.1961C37.3383 30.5791 29.5316 38 19.9924 38V40C30.5923 40 39.2656 31.7545 39.9491 21.3269L37.9534 21.1961ZM19.9924 38C10.0513 38 1.99243 29.9411 1.99243 20H-0.00756836C-0.00756836 31.0457 8.94674 40 19.9924 40V38ZM1.99243 20C1.99243 10.0589 10.0513 2 19.9924 2V0C8.94674 0 -0.00756836 8.95431 -0.00756836 20H1.99243ZM19.9924 2C21.3856 2 22.7407 2.1581 24.0411 2.45691L24.489 0.507714C23.0427 0.175373 21.5374 0 19.9924 0V2ZM23.3866 1.00448C22.9142 1.87285 22.6463 2.86816 22.6463 3.92308H24.6463C24.6463 3.21027 24.8267 2.54257 25.1435 1.96014L23.3866 1.00448ZM22.6463 3.92308C22.6463 6.55887 24.3133 8.80278 26.6473 9.66279L27.3388 7.78614C25.7656 7.20646 24.6463 5.69422 24.6463 3.92308H22.6463ZM26.2183 8.09214C26.1757 8.14441 26.1337 8.19755 26.0925 8.25154L27.6824 9.46487C27.7104 9.42823 27.7388 9.39221 27.7677 9.3568L26.2183 8.09214ZM26.0925 8.25155C24.0436 10.9365 24.5592 14.7741 27.2441 16.823L28.4574 15.2331C26.6506 13.8542 26.3036 11.2717 27.6824 9.46486L26.0925 8.25155ZM27.2441 16.823C28.8686 18.0627 30.9155 18.3627 32.7291 17.814L32.15 15.8997C30.9248 16.2703 29.5496 16.0666 28.4574 15.2331L27.2441 16.823ZM31.4445 16.9565C31.6973 19.4784 33.5136 21.6794 36.1213 22.2971L36.5822 20.3509C34.8299 19.9358 33.6049 18.4564 33.4346 16.7571L31.4445 16.9565ZM36.1213 22.2971C37.1831 22.5486 38.2488 22.5064 39.2297 22.2219L38.6727 20.3011C38.0146 20.4919 37.2996 20.5208 36.5822 20.3509L36.1213 22.2971Z' fill='%23000021'/%3E%3Ccircle cx='17' cy='14' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='42' cy='8' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='33' cy='4' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='12' cy='24' r='3' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='25.5' cy='26.5' r='3.5' stroke='%23000021' stroke-width='2'/%3E%3C/svg%3E") center no-repeat;
+    background-size: 75%;
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.12) !important;
+    z-index: 4;
+    transition: all .15s ease;
+}
+
+body.rtl #ot-sdk-btn.ot-sdk-show-settings,
+body.ar-ae #ot-sdk-btn.ot-sdk-show-settings,
+body.rtl #ot-sdk-btn.optanon-show-settings,
+body.ar-ae #ot-sdk-btn.optanon-show-settings {
+    right: auto;
+    left: var(--cookie-setting-right-offset);
+}
+
+body #ot-sdk-btn.ot-sdk-show-settings:hover,
+body #ot-sdk-btn.optanon-show-settings:hover {
+    background-color: #f7f7f7!important;
+    transform: scale(1.1);
+}
+
+@media only screen and (min-width: 426px) {
+
+    body #onetrust-banner-sdk.ot-buttons-fw .ot-sdk-three button {
+        width: auto !important;
+    }
+
+}
+
+@media (min-width: 550px) {
+
+    #onetrust-banner-sdk .ot-sdk-three.ot-sdk-columns {
+        width: auto !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+}
+
+@media only screen and (min-width: 740px) {
+    body #onetrust-banner-sdk button {
+        margin-bottom: 0;
+    }
+}
+
+@media only screen and (min-width: 890px) {
+    body #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group-parent {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    body #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group {
+        width: auto;
+        margin-top: 0;
+    }
+
+    body #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group button {
+        margin: 0;
+    }
+
+    #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group button:last-of-type {
+        margin-bottom: 0 !important;
+    }
+
+}
+
+@media only screen and (min-width: 897px) and (max-width: 1023px) {
+
+    #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent {
+        position: relative !important;
+        top: unset !important;
+        right: unset !important;
+        left: unset !important;
+        transform: none !important;
+    }
+
+}
+
+@media only screen and (min-width: 768px) {
+
+    body #onetrust-banner-sdk #onetrust-policy-text {
+        font-size: 15px;
+    }
+
+    body #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group-parent {
+        padding-left: 0;
+    }
+
+    body.rtl #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group-parent,
+    body.ar-ae #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group-parent {
+        padding-right: 0;
+    }
+
+    body #onetrust-banner-sdk .ot-sdk-row {
+        flex-direction: row;
+        gap: 32px;
+        padding: 12px 16px 18px 16px;
+    }
+
+    #onetrust-group-container:before {
+        content: '';
+        width: 80px;
+        min-width: 80px;
+        height: 80px;
+        display: block;
+        margin: 0;
+        background: url("data:image/svg+xml,%3Csvg width='45' height='40' viewBox='0 0 45 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M38.9512 21.2615L39.9491 21.3269L40.0424 19.9039L38.6727 20.3011L38.9512 21.2615ZM24.265 1.48231L25.1435 1.96014L25.773 0.802776L24.489 0.507714L24.265 1.48231ZM26.993 8.72447L27.7677 9.3568L28.6541 8.27082L27.3388 7.78614L26.993 8.72447ZM26.8875 8.85821L26.0925 8.25154L26.0925 8.25155L26.8875 8.85821ZM27.8507 16.028L27.2441 16.823L27.2441 16.823L27.8507 16.028ZM32.4396 16.8568L33.4346 16.7571L33.3134 15.5477L32.15 15.8997L32.4396 16.8568ZM36.3518 21.324L36.1213 22.2971V22.2971L36.3518 21.324ZM37.9534 21.1961C37.3383 30.5791 29.5316 38 19.9924 38V40C30.5923 40 39.2656 31.7545 39.9491 21.3269L37.9534 21.1961ZM19.9924 38C10.0513 38 1.99243 29.9411 1.99243 20H-0.00756836C-0.00756836 31.0457 8.94674 40 19.9924 40V38ZM1.99243 20C1.99243 10.0589 10.0513 2 19.9924 2V0C8.94674 0 -0.00756836 8.95431 -0.00756836 20H1.99243ZM19.9924 2C21.3856 2 22.7407 2.1581 24.0411 2.45691L24.489 0.507714C23.0427 0.175373 21.5374 0 19.9924 0V2ZM23.3866 1.00448C22.9142 1.87285 22.6463 2.86816 22.6463 3.92308H24.6463C24.6463 3.21027 24.8267 2.54257 25.1435 1.96014L23.3866 1.00448ZM22.6463 3.92308C22.6463 6.55887 24.3133 8.80278 26.6473 9.66279L27.3388 7.78614C25.7656 7.20646 24.6463 5.69422 24.6463 3.92308H22.6463ZM26.2183 8.09214C26.1757 8.14441 26.1337 8.19755 26.0925 8.25154L27.6824 9.46487C27.7104 9.42823 27.7388 9.39221 27.7677 9.3568L26.2183 8.09214ZM26.0925 8.25155C24.0436 10.9365 24.5592 14.7741 27.2441 16.823L28.4574 15.2331C26.6506 13.8542 26.3036 11.2717 27.6824 9.46486L26.0925 8.25155ZM27.2441 16.823C28.8686 18.0627 30.9155 18.3627 32.7291 17.814L32.15 15.8997C30.9248 16.2703 29.5496 16.0666 28.4574 15.2331L27.2441 16.823ZM31.4445 16.9565C31.6973 19.4784 33.5136 21.6794 36.1213 22.2971L36.5822 20.3509C34.8299 19.9358 33.6049 18.4564 33.4346 16.7571L31.4445 16.9565ZM36.1213 22.2971C37.1831 22.5486 38.2488 22.5064 39.2297 22.2219L38.6727 20.3011C38.0146 20.4919 37.2996 20.5208 36.5822 20.3509L36.1213 22.2971Z' fill='%23000021'/%3E%3Ccircle cx='17' cy='14' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='42' cy='8' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='33' cy='4' r='2' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='12' cy='24' r='3' stroke='%23000021' stroke-width='2'/%3E%3Ccircle cx='25.5' cy='26.5' r='3.5' stroke='%23000021' stroke-width='2'/%3E%3C/svg%3E") center no-repeat;
+        background-size: 44px 38px;
+    }
+
+    body #onetrust-group-container,
+    body #onetrust-banner-sdk .ot-sdk-columns {
+        display: flex;
+    }
+
+    body #onetrust-banner-sdk .ot-sdk-row {
+        display: flex;
+        align-items: center;
+    }
+
+    body #onetrust-banner-sdk:not(.ot-iab-2) #onetrust-button-group-parent {
+        margin: 0 0 0 auto;
+    }
+
+    body #onetrust-banner-sdk #onetrust-button-group-parent,
+    body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent {
+        min-width: fit-content;
+        width: auto !important;
+        transform: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    body #onetrust-banner-sdk .ot-sdk-eight.ot-sdk-columns {
+        width: auto !important;
+        align-items: center;
+    }
+
+    body #onetrust-banner-sdk #onetrust-button-group {
+        gap: 16px;
+    }
+
+    #onetrust-banner-sdk .onetrust-close-btn-ui {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    body #onetrust-banner-sdk #onetrust-close-btn-container {
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+}
+
+@media only screen and (min-width: 1024px) {
+
+    #onetrust-banner-sdk:not(.ot-iab-2) #onetrust-group-container {
+        width: auto !important;
+    }
+
+    #onetrust-banner-sdk #onetrust-button-group-parent,
+    #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent {
+        position: static !important;
+    }
+
+    #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent {
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+    body #onetrust-banner-sdk #onetrust-pc-btn-handler.cookie-setting-link,
+    body #onetrust-banner-sdk #onetrust-reject-all-handler,
+    body #onetrust-consent-sdk #onetrust-accept-btn-handler {
+        padding-left: 44px;
+        padding-right: 44px;
+        font-size: 18px;
+        line-height: 27px;
+        border-radius: 100px;
+    }
+
+    body #onetrust-banner-sdk .has-reject-all-button #onetrust-pc-btn-handler.cookie-setting-link {
+        padding-left: 0;
+        padding-right: 0;
+        min-width: unset;
+        font-size: 20px;
+    }
+
+    body #onetrust-banner-sdk #onetrust-policy-text,
+    body #onetrust-banner-sdk #onetrust-policy-text a {
+        font-size: 16px;
+    }
+
+    #otet-short-text {
+        display: none;
+    }
+
+    #otet-long-text {
+        display: block;
+    }
+
+    body #onetrust-banner-sdk #onetrust-close-btn-container {
+        right: 10px !important;
+    }
+
+    body.rtl #onetrust-banner-sdk #onetrust-close-btn-container,
+    body.ar-ae #onetrust-banner-sdk #onetrust-close-btn-container {
+        right: auto !important;
+        left: 10px !important;
+    }
+
+    #onetrust-banner-sdk .onetrust-close-btn-ui {
+        background-size: 16px !important;
+    }
+
+    body #onetrust-banner-sdk .ot-close-icon {
+        background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1.78249' width='21' height='2' rx='1' transform='rotate(45 1.78249 0)' fill='%23000021'/%3E%3Crect x='0.368271' y='15' width='21' height='2' rx='1' transform='rotate(-45 0.368271 15)' fill='%23000021'/%3E%3C/svg%3E%0A") !important;
+    }
+
+    body #ot-sdk-btn.ot-sdk-show-settings,
+    body #ot-sdk-btn.optanon-show-settings {
+        width: 45px !important;
+        height: 45px !important;
+        border-radius: 50%;
+    }
+
+}
+
+/* START adjust appearance for 3 buttons for language with long text on the buttons */
+@media only screen and (min-width: 768px) and (max-width: 899px) {
+    /*
+    es, it, de, ru, fr, nl, nb-no, pt-pt, cs-cz, ro, vi-vn,
+    */
+
+    html[lang="es"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="es"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="it"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="it"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="de"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="de"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="ru"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="ru"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="fr"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="fr"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="nl"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="nl"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="nb-no"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="nb-no"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="pt-pt"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="pt-pt"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="cs-cz"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="cs-cz"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="ro"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="ro"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="vi-vn"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="vi-vn"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button
+    {
+        min-width: unset;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1439px) {
+    /*
+    pl,
+    */
+    html[lang="pl"] body #onetrust-banner-sdk #onetrust-button-group-parent.has-reject-all-button,
+    html[lang="pl"] body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent.has-reject-all-button
+    {
+        min-width: unset;
+    }
+}
+/* END adjust appearance for 3 buttons for language with long text on the buttons */
+
+@media only screen and (min-width: 1440px) {
+
+    body #onetrust-banner-sdk .ot-sdk-row {
+        padding-right: 24px;
+    }
+
+    body.rtl #onetrust-banner-sdk .ot-sdk-row,
+    body.ar-ae #onetrust-banner-sdk .ot-sdk-row {
+        padding-left: 24px;
+    }
+
+    body #onetrust-banner-sdk #onetrust-close-btn-container {
+        right: 10px !important;
+    }
+
+    body.rtl #onetrust-banner-sdk #onetrust-close-btn-container,
+    body.ar-ae #onetrust-banner-sdk #onetrust-close-btn-container {
+        right: auto !important;
+        left: 10px !important;
+    }
+
+}
+
+@media only screen and (max-width: 767px) {
+
+    #onetrust-consent-sdk #onetrust-group-container {
+        padding-right: 26px;
+    }
+
+    .rtl #onetrust-consent-sdk #onetrust-group-container,
+    .ar-ae #onetrust-consent-sdk #onetrust-group-container {
+        padding-right: 0;
+        padding-left: 26px;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+
+    body #onetrust-pc-sdk #ot-pc-content,
+    body #onetrust-pc-sdk.ot-ftr-stacked .ot-btn-container {
+        margin: 1px 3px 0 16px;
+        padding-right: 10px;
+        width: calc(100% - 30px);
+    }
+}

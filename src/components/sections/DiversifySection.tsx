@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
 export default function DiversifySection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -8,8 +9,8 @@ export default function DiversifySection() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setIsVisible(true)
           }
@@ -20,13 +21,14 @@ export default function DiversifySection() {
       }
     )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    const element = sectionRef.current
+    if (element) {
+      observer.observe(element)
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
+      if (element) {
+        observer.unobserve(element)
       }
     }
   }, [])
@@ -37,10 +39,13 @@ export default function DiversifySection() {
       className="relative py-12 md:py-20 lg:py-32 overflow-hidden"
       style={{ backgroundColor: '#f7f7f7' }}
     >
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 items-center">
+      <div className="container mx-auto px-8 sm:px-12 lg:px-16">
+        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 items-center max-w-7xl mx-auto">
           {/* Left Column - Text Content */}
-          <div className="flex-1 space-y-6 md:space-y-8 text-center lg:text-left">
+          <div
+            className="flex flex-col items-start justify-center md:space-y-8 lg:max-w-xl"
+            style={{ minHeight: '400px' }}
+          >
             <div className="space-y-3 md:space-y-4">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black leading-tight">
                 Diversify your portfolio
@@ -53,7 +58,10 @@ export default function DiversifySection() {
 
             {/* CTA Button */}
             <div>
-              <button className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 border-emerald-600 bg-transparent text-emerald-600 rounded-lg text-base md:text-lg font-semibold hover:bg-emerald-600 hover:text-white transition-all">
+              <button
+                className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 bg-transparent rounded-full text-base md:text-lg font-semibold hover:text-white transition-all"
+                style={{ borderColor: '#16c635', color: '#16c635' }}
+              >
                 Explore Top Markets
               </button>
             </div>
@@ -68,7 +76,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '100ms' }}
             >
-              <img src="/images/bitcoin.svg" alt="Bitcoin" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/bitcoin.svg"
+                alt="Bitcoin"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* Apple - Top Center */}
@@ -78,7 +90,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '200ms' }}
             >
-              <img src="/images/apple-colored.svg" alt="Apple" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/apple-colored.svg"
+                alt="Apple"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* iShares - Top Right */}
@@ -88,7 +104,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '300ms' }}
             >
-              <img src="/images/ishares-colored.svg" alt="iShares" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/ishares-colored.svg"
+                alt="iShares"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* Ethereum - Middle Left */}
@@ -98,7 +118,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '400ms' }}
             >
-              <img src="/images/ethereum.svg" alt="Ethereum" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/ethereum.svg"
+                alt="Ethereum"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* Netflix - Center */}
@@ -108,7 +132,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '500ms' }}
             >
-              <img src="/images/netflix.svg" alt="Netflix" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/netflix.svg"
+                alt="Netflix"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* SPDR - Middle Right */}
@@ -118,7 +146,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '600ms' }}
             >
-              <img src="/images/spdr-colored.svg" alt="SPDR" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/spdr-colored.svg"
+                alt="SPDR"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
 
             {/* Airbnb - Bottom Left */}
@@ -138,7 +170,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '800ms' }}
             >
-              <img src="/images/ethereum (1).svg" alt="Ethereum" className="w-full h-auto drop-shadow-lg" />
+              <img
+                src="/images/ethereum (1).svg"
+                alt="Ethereum"
+                className="w-full h-auto drop-shadow-lg"
+              />
             </div>
           </div>
         </div>

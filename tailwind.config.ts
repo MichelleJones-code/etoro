@@ -42,7 +42,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-open-sans)', 'var(--font-roboto)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-jetbrains-mono)', 'monospace'],
         display: ['var(--font-raleway)', 'var(--font-roboto)', 'system-ui', 'sans-serif'],
       },
