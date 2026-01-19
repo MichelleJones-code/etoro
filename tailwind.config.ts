@@ -42,7 +42,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-jetbrains-mono)', 'monospace'],
+        display: ['var(--font-raleway)', 'var(--font-roboto)', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '18': '4.5rem',

@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono, Raleway, Roboto } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
-const inter = Inter({
+const roboto = Roboto({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["100", "300", "400", "500", "700", "900"],
+  variable: "--font-roboto",
+});
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-raleway",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
+  variable: "--font-jetbrains-mono",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${roboto.variable} ${raleway.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">
