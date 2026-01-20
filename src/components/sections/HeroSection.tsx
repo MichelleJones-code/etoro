@@ -2,52 +2,124 @@
 
 export default function HeroSection() {
   return (
-    <section className="relative  flex items-center bg-white my-5 overflow-hidden">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
-          {/* Left Content - Smaller */}
-          <div className="flex flex-col justify-center space-y-6 lg:w-2/5">
-            {/* Massive Headline */}
-            <div className="space-y-3">
-              <h1 className="font-mono text-2xl sm:text-3xl lg:text-4xl uppercase tracking-tighter">
-                Yep, it&apos;s
-              </h1>
-              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter leading-[0.85]">
-                all in one
-                <br />
-                <span className="">app</span>
-              </h2>
-            </div>
+    <section className="hp-cover wrapper">
+      <div className="e-container">
+        <div className="e-row">
+          {/* Left Content */}
+          <div className="col col_text">
+            <div className="text-box">
+              <div className="in-text-box e_col__text">
+                <div className="cover-text">
+                  <h1>
+                    Yep, it&apos;s <strong>all in one app</strong>
+                  </h1>
+                  <p className="cv_d">
+                    Invest in thousands of stocks, crypto, ETFs… all in one easy-to-use app
+                  </p>
+                </div>
 
-            {/* Subtext */}
-            <p className="text-lg sm:text-xl lg:text-2xl text-slate-500 leading-normal font-normal">
-              Invest in thousands of stocks, crypto, ETFs… all in one easy-to-use app
-            </p>
+                <div className="cta-group">
+                  <a href="#" className="e-cta">
+                    Join eToro
+                  </a>
+                </div>
 
-            {/* Interactive Elements */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-2">
-              <button
-                className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full px-8 text-base font-medium text-white transition-all hover:scale-[1.02] shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2"
-                style={{ backgroundColor: '#16c635' }}
-              >
-                <span>Join eToro</span>
-              </button>
+                <div className="inner-disclaimer">
+                  **<a href="#" className="underline">Terms and Conditions</a> apply.
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Right Column - Bigger Image */}
-          <div className="lg:w-3/5">
-            <img
-              src="/images/hero-image.webp"
-              alt="eToro App Interface"
-              className="w-full h-auto rounded-lg shadow-2xl"
-            />
-            <p className="text-sm text-gray-600 mt-4 font-light float-right">
-              **<span className="underline">Terms and Conditions</span> apply.
-            </p>
+          {/* Right Column - Image */}
+          <div className="col col_media">
+            <div className="image-box">
+              <img
+                src="/images/hero-image.webp"
+                alt="eToro App Interface"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .hp-cover {
+          background: linear-gradient(180deg, #f7f7f7 0%, #ffffff 100%);
+        }
+
+        .cover-text {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .cover-text h1 {
+          text-transform: uppercase;
+          letter-spacing: -0.02em;
+        }
+
+        .cover-text h1 strong {
+          display: block;
+          color: var(--etoro-green);
+        }
+
+        .cv_d {
+          font-size: var(--etoro-p-size);
+          line-height: var(--etoro-p-height);
+        }
+
+        @media only screen and (max-width: 660px) {
+          .e-row {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+          }
+
+          .cover-text {
+            text-align: center;
+          }
+
+          .cta-group {
+            align-items: center;
+          }
+
+          .inner-disclaimer {
+            text-align: center;
+          }
+        }
+
+        @media only screen and (min-width: 661px) {
+          .e-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+          }
+
+          .col {
+            display: flex;
+            align-items: center;
+            flex: 1 0 0;
+            width: 100%;
+            max-width: 50%;
+          }
+
+          .col_media {
+            justify-content: center;
+          }
+        }
+
+        @media only screen and (min-width: 1024px) {
+          .col_text {
+            max-width: 45%;
+          }
+
+          .col_media {
+            max-width: 55%;
+          }
+        }
+      `}</style>
     </section>
   )
 }

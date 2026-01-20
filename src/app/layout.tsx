@@ -1,32 +1,7 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Raleway, Roboto, Open_Sans } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/header'
 import AppFooter from '@/components/layout/AppFooter'
-
-const openSans = Open_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-open-sans',
-})
-
-const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['100', '300', '400', '500', '700', '900'],
-  variable: '--font-roboto',
-})
-
-const raleway = Raleway({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-raleway',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
-  variable: '--font-jetbrains-mono',
-})
 
 export const metadata: Metadata = {
   title: 'Invest With eToro™ | Stocks, Crypto & ETFs in One Powerful App',
@@ -47,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${openSans.variable} ${roboto.variable} ${raleway.variable} ${jetbrainsMono.variable} font-sans antialiased`}
-      >
+      <body className="antialiased">
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

@@ -1,7 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+/* eToro Variable Fonts */
+@font-face {
+  font-family: "eToro Compressed";
+  src: url("https://marketing.etorostatic.com/cache1/fonts/etoro/eToro-VF-v0.7.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-stretch: 0%;
+}
+
+@font-face {
+  font-family: "eToro Numbers";
+  src: url("https://marketing.etorostatic.com/cache1/fonts/etoro/eToro-VF-v0.7.ttf") format("truetype-variations");
+  font-weight: 620;
+  font-stretch: 84%;
+}
+
+@font-face {
+  font-family: "eToro";
+  src: url("https://marketing.etorostatic.com/cache1/fonts/etoro/eToro-VF-v0.7.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-stretch: 0% 100%;
+}
+
 :root {
+  /* Color variables */
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
@@ -28,6 +50,65 @@
   --warning-foreground: 0 0% 100%;
   --info: 207 90% 54%;
   --info-foreground: 0 0% 100%;
+  
+  /* eToro Font Variables */
+  --etoro-body-font: "eToro", sans-serif;
+  --etoro-numbers-font: 'eToro Numbers', sans-serif;
+  --etoro-title-font: "eToro Compressed", sans-serif;
+  
+  /* eToro Typography Variables */
+  --etoro-font-regular: 400;
+  --etoro-font-medium: 500;
+  --etoro-font-bold: 700;
+  --etoro-p-size: 16px;
+  --etoro-p-height: 26px;
+  --etoro-h1-size: 36px;
+  --etoro-h1-height: 44px;
+  --etoro-h2-size: 28px;
+  --etoro-h2-height: 36px;
+  --etoro-h3-size: 22px;
+  --etoro-h3-height: 26px;
+  --etoro-cta-size: 16px;
+  --etoro-cta-height: 22px;
+  --etoro-cta-padding-block: 10px 11px;
+  
+  /* eToro Color Variables */
+  --etoro-green: #13c636;
+  --etoro-green-hover: #22ea49;
+  --etoro-dark: #000021;
+  --etoro-text: #404059;
+  --etoro-grey-bg: #f7f7f7;
+}
+
+@media only screen and (min-width: 769px) {
+  :root {
+    --etoro-h2-size: 30px;
+    --etoro-h2-height: 40px;
+  }
+}
+
+@media only screen and (min-width: 1281px) {
+  :root {
+    --etoro-h2-size: 30px;
+    --etoro-h2-height: 40px;
+    --etoro-p-size: 18px;
+    --etoro-p-height: 27px;
+    --etoro-h3-size: 28px;
+    --etoro-h3-height: 32px;
+  }
+}
+
+@media screen and (min-width: 1441px) {
+  :root {
+    --etoro-h1-size: 60px;
+    --etoro-h1-height: 68px;
+    --etoro-h2-size: 40px;
+    --etoro-h2-height: 50px;
+    --etoro-p-size: 20px;
+    --etoro-p-height: 26px;
+    --etoro-h3-size: 24px;
+    --etoro-h3-height: 30px;
+  }
 }
 
 .dark {
@@ -58,20 +139,268 @@
   --info-foreground: 0 0% 100%;
 }
 
-* {
-  border-color: hsl(var(--border));
-}
-
 body {
   background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-feature-settings: "cv11", "ss01";
-  font-variation-settings: "opsz" 32;
-  line-height: 1.6;
+  color: var(--etoro-text);
+  font-family: var(--etoro-body-font);
+  font-weight: var(--etoro-font-regular);
+  font-size: var(--etoro-p-size);
+  line-height: var(--etoro-p-height);
+  letter-spacing: normal;
+  font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+* {
+  border-color: hsl(var(--border));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* eToro Typography */
+h1 {
+  font-family: var(--etoro-title-font);
+  font-size: var(--etoro-h1-size);
+  line-height: var(--etoro-h1-height);
+  font-weight: var(--etoro-font-regular);
+  color: var(--etoro-dark);
+  margin: 0;
+}
+
+h2 {
+  font-family: var(--etoro-body-font);
+  font-size: var(--etoro-h2-size);
+  line-height: var(--etoro-h2-height);
+  font-weight: var(--etoro-font-regular);
+  color: var(--etoro-dark);
+  margin: 0 0 12px;
+}
+
+@media only screen and (min-width: 769px) {
+  h2 {
+    margin-bottom: 16px;
+  }
+}
+
+h3 {
+  font-family: var(--etoro-body-font);
+  font-size: var(--etoro-h3-size);
+  line-height: var(--etoro-h3-height);
+  font-weight: var(--etoro-font-regular);
+  color: var(--etoro-dark);
+  margin: 0;
+}
+
+p {
+  font-size: var(--etoro-p-size);
+  line-height: var(--etoro-p-height);
+  color: var(--etoro-text);
+  margin: 0;
+}
+
+strong, b {
+  font-weight: var(--etoro-font-medium);
+  color: inherit;
+}
+
+/* Dark backgrounds */
+.dark-bg h1,
+.dark-bg h2,
+.dark-bg h3,
+.dark-bg p,
+.dark-bg strong,
+.dark-bg b {
+  color: #fff;
+}
+
+/* eToro Container */
+.e-container {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media only screen and (min-width: 661px) {
+  .e-container {
+    padding: 0 40px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .e-container {
+    padding: 0 80px;
+  }
+}
+
+/* eToro Wrapper */
+.wrapper {
+  padding: 40px 16px;
+}
+
+@media only screen and (min-width: 769px) {
+  .wrapper {
+    padding: 60px 40px;
+  }
+}
+
+@media only screen and (min-width: 1281px) {
+  .wrapper {
+    padding: 60px 80px;
+  }
+}
+
+@media screen and (min-width: 1441px) {
+  .wrapper {
+    padding: 100px 80px;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .wrapper {
+    padding: 120px 80px;
+  }
+}
+
+.wrapper.dark-bg {
+  background: var(--etoro-dark);
+}
+
+.wrapper.grey-bg {
+  background: var(--etoro-grey-bg);
+}
+
+/* eToro Buttons */
+.e-cta,
+.e-cta-alt {
+  text-decoration: none;
+  text-align: center;
+  font-style: normal;
+  font-weight: 500;
+  border: 1px solid;
+  transition: all 0.3s ease;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 22px;
+  padding: 10px 28px 11px;
+  border-radius: 22.5px;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 769px) {
+  .e-cta,
+  .e-cta-alt {
+    font-size: 18px;
+    line-height: 1.5;
+    padding: 10px 44px 11px;
+    border-radius: 100px;
+  }
+}
+
+.e-cta {
+  border-color: var(--etoro-green);
+  color: #fff;
+  background: var(--etoro-green);
+}
+
+.e-cta:hover {
+  background-color: var(--etoro-green-hover);
+  border-color: var(--etoro-green-hover);
+  color: #fff;
+}
+
+.e-cta.white {
+  border-color: #fff;
+  background-color: #fff;
+  color: var(--etoro-dark);
+}
+
+.e-cta.white:hover {
+  background-color: transparent;
+  color: #fff;
+}
+
+.e-cta-alt {
+  border-color: var(--etoro-green);
+  color: var(--etoro-green);
+  background: transparent;
+}
+
+.e-cta-alt:hover {
+  color: var(--etoro-green-hover);
+  border-color: var(--etoro-green-hover);
+}
+
+.e-cta-alt.white {
+  border-color: #fff;
+  color: #fff;
+}
+
+.e-cta-alt.white:hover {
+  opacity: 0.6;
+}
+
+/* CTA Group */
+.cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .cta-group {
+    gap: 20px;
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 1281px) {
+  .cta-group {
+    flex-direction: row;
+  }
+}
+
+/* Text alignment utilities */
+.center {
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Inner disclaimer */
+.inner-disclaimer {
+  font-size: 15px;
+  line-height: 20px;
+  margin-top: 0;
+  font-weight: var(--etoro-font-regular);
+  color: var(--etoro-dark);
+}
+
+@media only screen and (min-width: 769px) {
+  .inner-disclaimer {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+.dark-bg .inner-disclaimer {
+  color: #eee;
+}
+
+.inner-disclaimer a {
+  color: inherit;
+}
+
 
 .etoro-gradient {
   background: linear-gradient(135deg, #00b066 0%, #00d684 100%);

@@ -68,7 +68,7 @@ export default function DiversifySection() {
           </div>
 
           {/* Right Column - Abstract Card Arrangement */}
-          <div className="flex-1 relative h-[350px] sm:h-[450px] md:h-[500px] lg:h-[600px]">
+          <div className="flex-1 relative h-87.5 sm:h-112.5 md:h-125 lg:h-150">
             {/* Bitcoin - Top Left */}
             <div
               className={`absolute top-0 left-0 z-20 w-20 sm:w-28 md:w-32 lg:w-40 transition-all duration-700 ease-out ${
@@ -76,9 +76,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '100ms' }}
             >
-              <img
+              <Image
                 src="/images/bitcoin.svg"
                 alt="Bitcoin"
+                width={160}
+                height={160}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -90,9 +92,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '200ms' }}
             >
-              <img
-                src="/images/apple-colored.svg"
+              <Image
+                src="/images/apple.svg"
                 alt="Apple"
+                width={160}
+                height={160}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -104,9 +108,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '300ms' }}
             >
-              <img
+              <Image
                 src="/images/ishares-colored.svg"
                 alt="iShares"
+                width={144}
+                height={144}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -118,9 +124,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '400ms' }}
             >
-              <img
+              <Image
                 src="/images/ethereum.svg"
                 alt="Ethereum"
+                width={144}
+                height={144}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -132,9 +140,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '500ms' }}
             >
-              <img
+              <Image
                 src="/images/netflix.svg"
                 alt="Netflix"
+                width={160}
+                height={160}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -146,9 +156,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '600ms' }}
             >
-              <img
+              <Image
                 src="/images/spdr-colored.svg"
                 alt="SPDR"
+                width={144}
+                height={144}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
@@ -160,7 +172,7 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '700ms' }}
             >
-              <img src="/images/airbnb.svg" alt="Airbnb" className="w-full h-auto drop-shadow-lg" />
+              <Image src="/images/airbnb.svg" alt="Airbnb" width={160} height={160} className="w-full h-auto drop-shadow-lg" />
             </div>
 
             {/* Ethereum (alternative) - Bottom Center */}
@@ -170,9 +182,11 @@ export default function DiversifySection() {
               }`}
               style={{ transitionDelay: '800ms' }}
             >
-              <img
+              <Image
                 src="/images/ethereum (1).svg"
                 alt="Ethereum"
+                width={144}
+                height={144}
                 className="w-full h-auto drop-shadow-lg"
               />
             </div>
