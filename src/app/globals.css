@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -65,9 +65,8 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-feature-settings: "cv11", "ss01";
-  font-variation-settings: "opsz" 32;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -127,6 +126,30 @@ body {
   background: #64748b;
 }
 
+/* Minimalistic sidebar scrollbar */
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Firefox scrollbar */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
 .animate-pulse-green {
   animation: pulseGreen 2s infinite;
 }
@@ -150,5 +173,34 @@ body {
   }
   50% {
     background-color: rgba(255, 68, 68, 0.3);
+  }
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker-scroll {
+  animation: ticker-scroll 60s linear infinite;
+  width: fit-content;
+}
+
+.animate-ticker-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes slideOutFromSidebar {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
   }
 }

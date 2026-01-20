@@ -1,25 +1,13 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Raleway, Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import AppFooter from "@/components/layout/AppFooter";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-  variable: "--font-roboto",
-});
-
-const raleway = Raleway({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-raleway",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,15 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${roboto.variable} ${raleway.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <AppFooter />
-        </div>
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased">
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

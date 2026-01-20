@@ -42,9 +42,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-jetbrains-mono)', 'monospace'],
-        display: ['var(--font-raleway)', 'var(--font-roboto)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['monospace'],
+        display: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '18': '4.5rem',

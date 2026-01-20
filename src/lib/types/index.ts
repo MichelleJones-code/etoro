@@ -140,3 +140,25 @@ export interface NewsArticle {
   publishedAt: string;
   relatedSymbols: string[];
 }
+
+export interface Review {
+  id: string;
+  userId: string;
+  username: string;
+  avatar: string;
+  rating: number; // 1-5
+  comment: string;
+  timestamp: string;
+  helpful: number;
+}
+
+export interface TradeHistory {
+  id: string;
+  symbol: string;
+  action: 'buy' | 'sell';
+  amount: number;
+  price: number;
+  totalValue: number;
+  timestamp: string;
+  status: 'completed' | 'pending' | 'cancelled';
+}
