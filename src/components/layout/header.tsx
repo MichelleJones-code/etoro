@@ -139,19 +139,17 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-etoro-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-14 py-2">
         {/* Top Bar */}
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+        <div className="flex items- justify-between  h-16">
+          <div className='flex items-center space-x-12'>
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-etoro-green rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">e</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">eToro</span>
+           
+          <img src="/images/logo.svg" alt="eToro" className="" />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6">
             {navigationItems.map((item) => (
               <div
                 key={item.label}
@@ -160,9 +158,9 @@ export function Header() {
                 onMouseLeave={handleMouseLeave}
                 ref={(el) => { dropdownRefs.current[item.label] = el }}
               >
-                <button className="flex items-center space-x-1 text-gray-700 hover:text-etoro-green transition-colors font-medium">
+                <button className="flex items-center text-[17px]   tracking-tight space-x-1 text-gray-700 hover:text-etoro-green transition-colors ">
                   <span>{item.label}</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
+               
                 </button>
 
                 {/* Dropdown Menu */}
@@ -183,88 +181,40 @@ export function Header() {
               </div>
             ))}
           </nav>
-
-          {/* Right Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Search */}
-            <button
+          </div>
+          
+          <div className="flex items-center space-x-3">
+          <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 text-gray-600 hover:text-etoro-green transition-colors"
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
             >
               <Search className="w-5 h-5" />
+              Search
             </button>
+            
+            <button
 
-            {/* Language Selector */}
-            <div className="relative" ref={languageRef}>
-              <button
-                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                className="flex items-center space-x-1 text-gray-600 hover:text-etoro-green transition-colors"
-              >
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
+            >
                 <Globe className="w-5 h-5" />
-                <ChevronDown className={`w-4 h-4 transition-transform ${isLanguageOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {isLanguageOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-etoro-gray-200 py-2 z-50 max-h-64 overflow-y-auto etoro-scrollbar">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-etoro-gray-50 hover:text-etoro-green transition-colors"
-                      onClick={() => setIsLanguageOpen(false)}
-                    >
-                      {lang.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Help */}
-            <button className="p-2 text-gray-600 hover:text-etoro-green transition-colors">
-              <HelpCircle className="w-5 h-5" />
+              English (UK)
             </button>
 
-            {/* Download App */}
-            <button className="hidden md:flex items-center space-x-1 text-gray-600 hover:text-etoro-green transition-colors">
-              <Download className="w-5 h-5" />
-              <span className="text-sm">Download App</span>
-            </button>
+            <Link
+              href="/dashboard"
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
+            >
+              Login
+            </Link>
 
-            {/* Auth Buttons */}
-            <div className="hidden lg:flex items-center space-x-3">
-              {isAuthenticated ? (
-                <>
-                  <Link href="/dashboard">
-                    <Button variant="outline" size="sm">
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={logout}
-                    className="flex items-center space-x-2"
-                  >
-                    <User className="w-4 h-4" />
-                    <span>{user?.firstName}</span>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link href="/login">
-                    <Button variant="outline" size="sm">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link href="/signup">
-                    <Button size="sm" className="bg-etoro-green hover:bg-etoro-green-dark">
-                      Join Now
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
+           
 
+
+           
+
+
+
+         
             {/* Mobile Menu Toggle */}
             <button
               onClick={toggleMobileMenu}

@@ -8,23 +8,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#edf1f4] flex flex-col ">
 
-      {/* Header / Logo */}
-      <header className="p-6">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-1">
-            {/* Simple SVG approximation of the eToro bull logo */}
-            <svg width="120" height="40" viewBox="0 0 100 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 5C10 5 5 5 5 15C5 25 10 25 10 25M25 5C25 5 30 5 30 15C30 25 25 25 25 25" stroke="#46b445" strokeWidth="4" strokeLinecap="round"/>
-              <text x="35" y="22" fill="#46b445" fontWeight="bold" fontSize="20">eToro</text>
-            </svg>
-          </div>
-          
-          <div className="flex items-center gap-1 cursor-pointer hover:bg-gray-200 p-1 rounded transition">
-            <span className="text-sm font-medium text-gray-700">🇬🇧 English</span>
-            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </div>
-        </div>
-      </header>
+   
 
       {/* Main Login Card */}
       <main className="flex-grow flex items-center justify-center p-4">

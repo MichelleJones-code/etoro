@@ -32,8 +32,7 @@ export const Header = () => {
         {/* User Initials / Profile Circle */}
         <div className="flex items-center  pl-2 border-l border-gray-200">
           <div className="h-8 w-8 rounded-full bg-[#edf1f4] flex items-center justify-center text-xs font-bold text-gray-600 border border-gray-300 cursor-pointer hover:bg-gray-200 transition-colors">
-            RB
-          </div>
+DW          </div>
        
         </div>
       </div>

@@ -21,25 +21,120 @@ interface MarketState {
   cancelOrder: (orderId: string) => void
   closePosition: (positionId: string) => void
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void
+  processWithdrawal: (amount: number, method: string, details: Record<string, string>) => Transaction
 }
 
 // Initial portfolio data
 const initialPortfolio: Portfolio = {
-  totalValue: 10000,
-  availableBalance: 7500,
-  investedValue: 2500,
+  totalValue: 1253427.89,
+  availableBalance: 867543.78,
+  investedValue: 385884.11,
   totalPL: 125.50,
   totalPLPercent: 1.26,
   positions: [],
   transactions: [],
 }
 
+// Initial mock withdrawal transactions
+const initialWithdrawals: Transaction[] = [
+  {
+    id: '1',
+    type: 'withdraw',
+    amount: 25347.82,
+    currency: 'USD',
+    description: 'Withdrawal via Bank Transfer - Ref: WD-1725123456789',
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '2',
+    type: 'withdraw',
+    amount: 50123.45,
+    currency: 'USD',
+    description: 'Withdrawal via Wire Transfer - Ref: WD-1724956789012',
+    timestamp: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '3',
+    type: 'withdraw',
+    amount: 15678.93,
+    currency: 'USD',
+    description: 'Withdrawal via Bank Transfer - Ref: WD-1724789012345',
+    timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '4',
+    type: 'withdraw',
+    amount: 7524.67,
+    currency: 'USD',
+    description: 'Withdrawal via PayPal - Ref: WD-1724620123456',
+    timestamp: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '5',
+    type: 'withdraw',
+    amount: 35421.89,
+    currency: 'USD',
+    description: 'Withdrawal via Crypto - Ref: WD-1724451234567',
+    timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '6',
+    type: 'withdraw',
+    amount: 12345.21,
+    currency: 'USD',
+    description: 'Withdrawal via Bank Transfer - Ref: WD-1724282345678',
+    timestamp: new Date(Date.now() - 38 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '7',
+    type: 'withdraw',
+    amount: 30187.56,
+    currency: 'USD',
+    description: 'Withdrawal via Wire Transfer - Ref: WD-1724113456789',
+    timestamp: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '8',
+    type: 'withdraw',
+    amount: 45234.14,
+    currency: 'USD',
+    description: 'Withdrawal via Bank Transfer - Ref: WD-1723944567890',
+    timestamp: new Date(Date.now() - 52 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '9',
+    type: 'withdraw',
+    amount: 18234.73,
+    currency: 'USD',
+    description: 'Withdrawal via Crypto - Ref: WD-1723775678901',
+    timestamp: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+  {
+    id: '10',
+    type: 'withdraw',
+    amount: 22678.42,
+    currency: 'USD',
+    description: 'Withdrawal via Bank Transfer - Ref: WD-1723606789012',
+    timestamp: new Date(Date.now() - 68 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'completed',
+  },
+]
+
 export const useMarketStore = create<MarketState>((set, get) => ({
   marketData: {},
   portfolio: initialPortfolio,
   watchlist: ['AAPL', 'GOOGL', 'BTC', 'ETH'],
   orders: [],
-  transactions: [],
+  transactions: initialWithdrawals,
   isLoading: false,
   selectedMarket: null,
 
@@ -165,5 +260,51 @@ export const useMarketStore = create<MarketState>((set, get) => ({
     set(state => ({
       transactions: [...state.transactions, transaction],
     }))
+  },
+
+  processWithdrawal: (amount: number, method: string, details: Record<string, string>) => {
+    const state = get()
+    
+    // Validate withdrawal amount doesn't exceed available balance
+    if (amount > state.portfolio.availableBalance) {
+      throw new Error('Insufficient balance')
+    }
+
+    // Generate reference ID: WD-{timestamp}
+    const referenceId = `WD-${Date.now()}`
+    
+    const transaction: Transaction = {
+      id: Date.now().toString(),
+      type: 'withdraw',
+      amount,
+      currency: 'USD',
+      description: `Withdrawal via ${method}`,
+      timestamp: new Date().toISOString(),
+      status: 'pending', // Will be updated to 'completed' after processing
+    }
+
+    // Update balance and add transaction
+    set(state => ({
+      portfolio: {
+        ...state.portfolio,
+        availableBalance: state.portfolio.availableBalance - amount,
+      },
+      transactions: [...state.transactions, transaction],
+    }))
+
+    // Simulate processing delay, then update status to completed
+    setTimeout(() => {
+      set(state => ({
+        transactions: state.transactions.map(t =>
+          t.id === transaction.id ? { ...t, status: 'completed' as const } : t
+        ),
+      }))
+    }, 2000)
+
+    // Add reference ID to transaction description for display
+    return {
+      ...transaction,
+      description: `${transaction.description} - Ref: ${referenceId}`,
+    }
   },
 }))

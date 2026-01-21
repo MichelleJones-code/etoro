@@ -223,15 +223,15 @@ export const Sidebar = () => {
                     className="w-full"
                   />
                 </div>
-                <span className="font-semibold text-lg tracking-tight text-white">Roy Banks</span>
+                <span className="font-semibold text-lg tracking-tight text-white">David weaver</span>
               </div>
               
               <div className="space-y-1.5 pt-4">
                 <div className="flex justify-between font-light tracking-tight text-sm ">
-                  <span>30% Complete</span>
+                  <span>70% Complete</span>
                 </div>
                 <div className="w-full bg-zinc-900 h-[2.5px] rounded-full overflow-hidden">
-                  <div className="bg-[#4ba3f5] h-full w-[30%]"></div>
+                  <div className="bg-[#4ba3f5] h-full w-[70%]"></div>
                 </div>
                 <button className="font-extralight">
                   Complete Profile
