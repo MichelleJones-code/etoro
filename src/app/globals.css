@@ -72,6 +72,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.font-home {
+  font-family: "Sofia Sans Extra Condensed", system-ui, sans-serif !important;
+}
+
 .etoro-gradient {
   background: linear-gradient(135deg, #00b066 0%, #00d684 100%);
 }

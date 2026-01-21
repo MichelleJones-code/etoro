@@ -2,44 +2,44 @@
 
 const footerLinks = {
   topInstruments: [
-    { id: 1, title: 'Bitcoin (BTC)', href: '#' },
-    { id: 2, title: 'Ethereum (ETH)', href: '#' },
-    { id: 3, title: 'Apple (AAPL)', href: '#' },
-    { id: 4, title: 'Tesla (TSLA)', href: '#' },
-    { id: 5, title: 'Amazon (AMZN)', href: '#' }
+    { id: 1, title: 'Bitcoin (BTC)', href: '/auth/login' },
+    { id: 2, title: 'Ethereum (ETH)', href: '/auth/login' },
+    { id: 3, title: 'Apple (AAPL)', href: '/auth/login' },
+    { id: 4, title: 'Tesla (TSLA)', href: '/auth/login' },
+    { id: 5, title: 'Amazon (AMZN)', href: '/auth/login' }
   ],
   support: [
-    { id: 1, title: 'Help Center', href: '#' },
-    { id: 2, title: 'Contact Us', href: '#' },
-    { id: 3, title: 'Customer Service', href: '#' },
-    { id: 4, title: 'FAQ', href: '#' },
-    { id: 5, title: 'System Status', href: '#' }
+    { id: 1, title: 'Help Center', href: '/auth/login' },
+    { id: 2, title: 'Contact Us', href: '/auth/login' },
+    { id: 3, title: 'Customer Service', href: '/auth/login' },
+    { id: 4, title: 'FAQ', href: '/auth/login' },
+    { id: 5, title: 'System Status', href: '/auth/login' }
   ],
   learnMore: [
-    { id: 1, title: 'About eToro', href: '#' },
-    { id: 2, title: 'How it works', href: '#' },
-    { id: 3, title: 'Trading Academy', href: '#' },
-    { id: 4, title: 'Popular Investors', href: '#' },
-    { id: 5, title: 'News & Insights', href: '#' }
+    { id: 1, title: 'About eToro', href: '/auth/login' },
+    { id: 2, title: 'How it works', href: '/auth/login' },
+    { id: 3, title: 'Trading Academy', href: '/auth/login' },
+    { id: 4, title: 'Popular Investors', href: '/auth/login' },
+    { id: 5, title: 'News & Insights', href: '/auth/login' }
   ],
   aboutUs: [
-    { id: 1, title: 'Company', href: '#' },
-    { id: 2, title: 'Careers', href: '#' },
-    { id: 3, title: 'Press', href: '#' },
-    { id: 4, title: 'Partnerships', href: '#' },
-    { id: 5, title: 'Blog', href: '#' }
+    { id: 1, title: 'Company', href: '/auth/login' },
+    { id: 2, title: 'Careers', href: '/auth/login' },
+    { id: 3, title: 'Press', href: '/auth/login' },
+    { id: 4, title: 'Partnerships', href: '/auth/login' },
+    { id: 5, title: 'Blog', href: '/auth/login' }
   ],
   privacyRegulation: [
-    { id: 1, title: 'Terms & Conditions', href: '#' },
-    { id: 2, title: 'Privacy Policy', href: '#' },
-    { id: 3, title: 'Cookie Policy', href: '#' },
-    { id: 4, title: 'Regulation', href: '#' }
+    { id: 1, title: 'Terms & Conditions', href: '/auth/login' },
+    { id: 2, title: 'Privacy Policy', href: '/auth/login' },
+    { id: 3, title: 'Cookie Policy', href: '/auth/login' },
+    { id: 4, title: 'Regulation', href: '/auth/login' }
   ],
   partnersPromotions: [
-    { id: 1, title: 'Affiliates', href: '#' },
-    { id: 2, title: 'Partners', href: '#' },
-    { id: 3, title: 'Promotions', href: '#' },
-    { id: 4, title: 'Refer a Friend', href: '#' }
+    { id: 1, title: 'Affiliates', href: '/auth/login' },
+    { id: 2, title: 'Partners', href: '/auth/login' },
+    { id: 3, title: 'Promotions', href: '/auth/login' },
+    { id: 4, title: 'Refer a Friend', href: '/auth/login' }
   ]
 }
 
@@ -53,7 +53,7 @@ const socialLinks = [
 export default function AppFooter() {
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-8 sm:py-10 lg:py-12 max-w-[83rem]">
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Top Instruments */}

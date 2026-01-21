@@ -3,57 +3,57 @@ import { Facebook, Twitter, Linkedin, Instagram, Youtube } from 'lucide-react'
 
 const footerLinks = {
   topInstruments: [
-    { label: 'Bitcoin (BTC)', href: '/markets/btc' },
-    { label: 'Ethereum (ETH)', href: '/markets/eth' },
-    { label: 'Shiba (in Millions)', href: '/markets/shibxm' },
-    { label: 'Tesla', href: '/markets/tsla' },
-    { label: 'Apple', href: '/markets/aapl' },
-    { label: 'Nio', href: '/markets/nio' },
+    { label: 'Bitcoin (BTC)', href: '/auth/login' },
+    { label: 'Ethereum (ETH)', href: '/auth/login' },
+    { label: 'Shiba (in Millions)', href: '/auth/login' },
+    { label: 'Tesla', href: '/auth/login' },
+    { label: 'Apple', href: '/auth/login' },
+    { label: 'Nio', href: '/auth/login' },
   ],
   support: [
     { label: 'Help Center', href: 'https://help.etoro.com/s/?language=en_GB' },
-    { label: 'How to deposit', href: '/customer-service/deposit-faq/' },
-    { label: 'How to withdraw', href: '/customer-service/withdraw-faq/' },
-    { label: 'How to Open an Account', href: '/customer-service/how-to-open-etoro-account/' },
-    { label: 'How to verify your account', href: '/customer-service/account-verification/' },
-    { label: 'Customer Service', href: '/customer-service/' },
-    { label: 'Client Vulnerability', href: '/customer-service/vulnerability-program/' },
+    { label: 'How to deposit', href: '/auth/login' },
+    { label: 'How to withdraw', href: '/auth/login' },
+    { label: 'How to Open an Account', href: '/auth/login' },
+    { label: 'How to verify your account', href: '/auth/login' },
+    { label: 'Customer Service', href: '/auth/login' },
+    { label: 'Client Vulnerability', href: '/auth/login' },
   ],
   learnMore: [
-    { label: 'How CopyTrading Works', href: '/copytrader/how-it-works/' },
-    { label: 'Responsible Trading', href: '/customer-service/responsible-trading/' },
-    { label: 'Interest on Balance', href: '/investing/interest-on-balance/' },
-    { label: 'What is Leverage & Margin', href: '/trading/academy/leverage-margin/' },
-    { label: 'Buy and Sell Explained', href: '/news-and-analysis/trading/trading-basics-buy-and-sell-explained/' },
-    { label: 'Tax Report', href: '/customer-service/tax-report/' },
-    { label: 'eToro Academy', href: '/academy/' },
+    { label: 'How CopyTrading Works', href: '/auth/login' },
+    { label: 'Responsible Trading', href: '/auth/login' },
+    { label: 'Interest on Balance', href: '/auth/login' },
+    { label: 'What is Leverage & Margin', href: '/auth/login' },
+    { label: 'Buy and Sell Explained', href: '/auth/login' },
+    { label: 'Tax Report', href: '/auth/login' },
+    { label: 'eToro Academy', href: '/auth/login' },
   ],
   downloadApp: [
     { label: 'App Store', href: 'https://etoro.onelink.me/2615279504/3ff5f19f' },
     { label: 'Google Play', href: 'https://etoro.onelink.me/2615279504/3ff5f19f' },
   ],
   aboutUs: [
-    { label: 'About eToro', href: '/about/' },
-    { label: 'eToro Reviews', href: '/about/reviews/' },
-    { label: 'Careers', href: '/about/careers/' },
-    { label: 'Our offices', href: '/about/our-offices/' },
-    { label: 'Accessibility', href: '/customer-service/accessibility/' },
-    { label: 'Imprint', href: '/about/imprint/' },
+    { label: 'About eToro', href: '/auth/login' },
+    { label: 'eToro Reviews', href: '/auth/login' },
+    { label: 'Careers', href: '/auth/login' },
+    { label: 'Our offices', href: '/auth/login' },
+    { label: 'Accessibility', href: '/auth/login' },
+    { label: 'Imprint', href: '/auth/login' },
   ],
   privacyAndRegulation: [
-    { label: 'eToro Cookie Policy', href: '/customer-service/cookies/' },
-    { label: 'Privacy Policy', href: '/customer-service/privacy/' },
-    { label: 'Regulation & License', href: '/customer-service/regulation-license/' },
-    { label: 'General Risk Disclosure', href: '/customer-service/general-risk-disclosure/' },
-    { label: 'Terms & Conditions', href: '/customer-service/terms-conditions/' },
-    { label: 'Key Information Documents', href: '/customer-service/key-information-documents/' },
+    { label: 'eToro Cookie Policy', href: '/auth/login' },
+    { label: 'Privacy Policy', href: '/auth/login' },
+    { label: 'Regulation & License', href: '/auth/login' },
+    { label: 'General Risk Disclosure', href: '/auth/login' },
+    { label: 'Terms & Conditions', href: '/auth/login' },
+    { label: 'Key Information Documents', href: '/auth/login' },
   ],
   partnersAndPromotions: [
-    { label: 'Invite a friend', href: '/invite/' },
+    { label: 'Invite a friend', href: '/auth/login' },
     { label: 'Affiliate Program', href: 'https://www.etoropartners.com/' },
-    { label: 'eToro Club', href: '/about/club/' },
-    { label: 'Investment Insurance', href: '/investing/insurance/' },
-    { label: 'Partner Smart Portfolios', href: '/investing/portfolios/partners/' },
+    { label: 'eToro Club', href: '/auth/login' },
+    { label: 'Investment Insurance', href: '/auth/login' },
+    { label: 'Partner Smart Portfolios', href: '/auth/login' },
   ],
 }
 
@@ -215,10 +215,10 @@ export function Footer() {
               </div>
               
               <div className="flex flex-wrap gap-4">
-                <Link href="/customer-service/general-risk-disclosure/" className="text-etoro-green hover:text-etoro-green-light text-sm">
+                <Link href="/auth/login" className="text-etoro-green hover:text-etoro-green-light text-sm">
                   General Risk Disclosure
                 </Link>
-                <Link href="/customer-service/terms-conditions/" className="text-etoro-green hover:text-etoro-green-light text-sm">
+                <Link href="/auth/login" className="text-etoro-green hover:text-etoro-green-light text-sm">
                   Terms & Conditions
                 </Link>
               </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/layout/Sidebar';
 import { Header } from '@/components/dashboard/layout/Header';
@@ -7,6 +8,7 @@ import { Ticker } from '@/components/dashboard/sections/Ticker';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isWatchlistPage = pathname === '/dashboard/watchlists';
   const isWalletPage = pathname === '/dashboard/wallet';
   const isWithdrawPage = pathname === '/dashboard/withdraw';
@@ -15,23 +17,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const isCopytraderDetailPage = pathname?.startsWith('/dashboard/discover/copytrader/');
   const isPortfolioPage = pathname === '/dashboard/portfolio';
   const isSettingsPage = pathname === '/dashboard/settings';
+  const isKYCPage = pathname === '/dashboard/kyc';
 
   return (
-    <div className="flex h-screen bg-slate-200 overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-slate-200 overflow-x-hidden lg:overflow-hidden">
       {/* 1. Sidebar stays on the left */}
-      <Sidebar />
+      <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
       {/* 2. Main wrapper for everything else */}
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex flex-col flex-1 min-w-0 w-full lg:w-auto">
         
         {/* 3. Header stays at the top */}
-        <Header />
+        <Header isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
 
-        {/* 4. Ticker sits below the header (hidden on watchlist, wallet, withdraw, discover, crypto detail, copytrader detail, portfolio, and settings pages) */}
-        {!isWatchlistPage && !isWalletPage && !isWithdrawPage && !isDiscoverPage && !isCryptoDetailPage && !isCopytraderDetailPage && !isPortfolioPage && !isSettingsPage && <Ticker />}
+        {/* 4. Ticker sits below the header (hidden on watchlist, wallet, withdraw, discover, crypto detail, copytrader detail, portfolio, settings, and kyc pages) */}
+        {!isWatchlistPage && !isWalletPage && !isWithdrawPage && !isDiscoverPage && !isCryptoDetailPage && !isCopytraderDetailPage && !isPortfolioPage && !isSettingsPage && !isKYCPage && <Ticker />}
 
         {/* 5. Main content area that scrolls */}
-        <main className={`flex-1 overflow-y-auto ${isWatchlistPage ? '' : isPortfolioPage ? 'bg-white' : isDiscoverPage ? 'bg-white' : isCryptoDetailPage ? 'bg-white' : isCopytraderDetailPage ? 'bg-white' : 'p-4 md:p-8'}`}>
+        <main className={`flex-1 lg:overflow-y-auto ${isWatchlistPage ? '' : isPortfolioPage ? 'bg-white' : isDiscoverPage ? 'bg-white' : isCryptoDetailPage ? 'bg-white' : isCopytraderDetailPage ? 'bg-white' : isKYCPage ? 'p-4 md:p-8' : 'p-4 md:p-8'}`}>
           {children}
         </main>
       </div>

@@ -139,10 +139,10 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-etoro-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-14 py-2">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-14 py-2">
         {/* Top Bar */}
         <div className="flex items- justify-between  h-16">
-          <div className='flex items-center space-x-12'>
+          <div className='flex items-center space-x-4 sm:space-x-6 lg:space-x-12'>
           <Link href="/" className="flex items-center space-x-2">
            
           <img src="/images/logo.svg" alt="eToro" className="" />
@@ -169,7 +169,7 @@ export function Header() {
                     {item.children.map((child) => (
                       <Link
                         key={child.label}
-                        href={child.href || '#'}
+                        href={child.href || '/auth/login'}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-etoro-gray-50 hover:text-etoro-green transition-colors"
                         onClick={() => setOpenDropdown(null)}
                       >
@@ -183,28 +183,28 @@ export function Header() {
           </nav>
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
           <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-1 sm:gap-x-3 text-base sm:text-lg transition-colors"
             >
               <Search className="w-5 h-5" />
-              Search
+              <span className="hidden sm:inline">Search</span>
             </button>
             
             <button
 
-              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-1 sm:gap-x-3 text-base sm:text-lg transition-colors"
             >
                 <Globe className="w-5 h-5" />
-              English (UK)
+              <span className="hidden sm:inline">English (UK)</span>
             </button>
 
             <Link
               href="/dashboard"
-              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-3 text-lg transition-colors"
+              className="p-2 text-gray-600 hover:text-etoro-green flex tracking-tight items-center gap-x-1 sm:gap-x-3 text-base sm:text-lg transition-colors"
             >
-              Login
+              <span className="hidden sm:inline">Login</span>
             </Link>
 
            
@@ -244,7 +244,7 @@ export function Header() {
                       {item.children.map((child) => (
                         <Link
                           key={child.label}
-                          href={child.href || '#'}
+                          href={child.href || '/auth/login'}
                           className="block py-2 text-sm text-gray-600 hover:text-etoro-green transition-colors"
                           onClick={() => {
                             setOpenDropdown(null)

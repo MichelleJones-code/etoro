@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
@@ -9,7 +9,8 @@ import {
   Eye,
   PieChart,
   Search,
-  Wallet
+  Wallet,
+  X
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { DepositFundsModal } from '@/components/dashboard/sections/DepositFundsModal';
@@ -131,12 +132,18 @@ const NavItem = ({ label, href, active = false, badge = "", variant = 'primary',
   );
 };
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
+}
+
+export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuthStore();
+  const sidebarRef = useRef<HTMLElement>(null);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -145,6 +152,33 @@ export const Sidebar = () => {
   const handleLogout = () => {
     logout();
     router.push('/dashboard/login');
+  };
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen?.(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      // Prevent body scroll when mobile menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen, setIsMobileMenuOpen]);
+
+  // Close mobile menu on navigation
+  const handleNavClick = () => {
+    setIsMobileMenuOpen?.(false);
   };
 
   // Determine active state based on pathname
@@ -156,10 +190,23 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className={`
-      bg-[#1e272e] text-white h-screen flex flex-col shrink-0 transition-all duration-300 ease-in-out
-      ${isCollapsed ? 'w-16' : 'w-[350px]'}
-    `}>
+    <>
+      {/* Mobile backdrop overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen?.(false)}
+        />
+      )}
+      
+      <aside 
+        ref={sidebarRef}
+        className={`
+          bg-[#1e272e] text-white h-screen flex flex-col shrink-0 transition-all duration-300 ease-in-out
+          ${isCollapsed ? 'w-16' : 'w-[350px]'}
+          ${isMobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 lg:relative lg:inset-auto' : 'hidden lg:flex'}
+        `}
+      >
       {/* Brand Logo & Menu Toggle */}
       <div className={`pt-5 pb-6 flex items-center transition-all duration-300 ease-in-out ${
         isCollapsed ? 'px-4 justify-center' : 'px-7 justify-between'
@@ -175,18 +222,30 @@ export const Sidebar = () => {
             className=""
           />
         </div>
-        <button
-          onClick={toggleCollapse}
-          className="text-gray-400 hover:text-white cursor-pointer transition-all duration-300 ease-in-out flex-shrink-0"
-        >
-          <img 
-            src="/dash/icon-expand-collapse.svg" 
-            alt="Menu" 
-            className={`w-6 transition-transform duration-300 ease-in-out ${
-              isCollapsed ? 'scale-x-[-1]' : 'scale-x-[1]'
-            }`}
-          />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Mobile close button */}
+          {isMobileMenuOpen && (
+            <button
+              onClick={() => setIsMobileMenuOpen?.(false)}
+              className="lg:hidden text-gray-400 hover:text-white cursor-pointer transition-all duration-300 ease-in-out flex-shrink-0"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          )}
+          {/* Desktop collapse toggle */}
+          <button
+            onClick={toggleCollapse}
+            className="hidden lg:block text-gray-400 hover:text-white cursor-pointer transition-all duration-300 ease-in-out flex-shrink-0"
+          >
+            <img 
+              src="/dash/icon-expand-collapse.svg" 
+              alt="Menu" 
+              className={`w-6 transition-transform duration-300 ease-in-out ${
+                isCollapsed ? 'scale-x-[-1]' : 'scale-x-[1]'
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Primary Navigation */}
@@ -198,14 +257,14 @@ export const Sidebar = () => {
           /* Collapsed navigation - evenly spread icons */
           <nav className="flex flex-col justify-between h-full pb-5 overflow-hidden transition-all duration-300 ease-in-out">
             <div className="flex-1 flex flex-col justify-evenly items-center py-4">
-              <NavItem label="Home" href="/dashboard" active={isActive('/dashboard')} collapsed={isCollapsed} icon={Home} />
-              <NavItem label="Watchlist" href="/dashboard/watchlists" active={isActive('/dashboard/watchlists')} collapsed={isCollapsed} icon={Eye} />
-              <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} />
-              <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} />
-              <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} />
-              <NavItem label="CopyTrader" href="/dashboard/discover" active={isActive('/dashboard/discover/copytrader')} badge="New" variant="secondary" icon={Users} collapsed={isCollapsed} />
-              <NavItem label="Settings" href="/dashboard/settings" active={isActive('/dashboard/settings')} variant="secondary" icon={Settings} collapsed={isCollapsed} />
-              <NavItem label="Logout" onClick={handleLogout} variant="secondary" icon={LogOut} collapsed={isCollapsed} />
+              <NavItem label="Home" href="/dashboard" active={isActive('/dashboard')} collapsed={isCollapsed} icon={Home} onClick={handleNavClick} />
+              <NavItem label="Watchlist" href="/dashboard/watchlists" active={isActive('/dashboard/watchlists')} collapsed={isCollapsed} icon={Eye} onClick={handleNavClick} />
+              <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} onClick={handleNavClick} />
+              <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} onClick={handleNavClick} />
+              <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} onClick={handleNavClick} />
+              <NavItem label="CopyTrader" href="/dashboard/discover" active={isActive('/dashboard/discover/copytrader')} badge="New" variant="secondary" icon={Users} collapsed={isCollapsed} onClick={handleNavClick} />
+              <NavItem label="Settings" href="/dashboard/settings" active={isActive('/dashboard/settings')} variant="secondary" icon={Settings} collapsed={isCollapsed} onClick={handleNavClick} />
+              <NavItem label="Logout" onClick={() => { handleLogout(); handleNavClick(); }} variant="secondary" icon={LogOut} collapsed={isCollapsed} />
             </div>
           </nav>
         ) : (
@@ -239,11 +298,11 @@ export const Sidebar = () => {
               </div>
             </div>
 
-            <NavItem label="Home" href="/dashboard" active={isActive('/dashboard')} collapsed={isCollapsed} icon={Home} />
-            <NavItem label="Watchlist" href="/dashboard/watchlists" active={isActive('/dashboard/watchlists')} collapsed={isCollapsed} icon={Eye} />
-            <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} />
-            <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} />
-            <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} />
+            <NavItem label="Home" href="/dashboard" active={isActive('/dashboard')} collapsed={isCollapsed} icon={Home} onClick={handleNavClick} />
+            <NavItem label="Watchlist" href="/dashboard/watchlists" active={isActive('/dashboard/watchlists')} collapsed={isCollapsed} icon={Eye} onClick={handleNavClick} />
+            <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} onClick={handleNavClick} />
+            <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} onClick={handleNavClick} />
+            <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} onClick={handleNavClick} />
             
             {/* Section Heading */}
             <div className={`mt-8 px-8 pb-2 text-gray-500 tracking-tight transition-all duration-300 ease-in-out ${
@@ -251,9 +310,9 @@ export const Sidebar = () => {
             }`}>
               More
             </div>
-            <NavItem label="CopyTrader" href="/dashboard/discover" active={isActive('/dashboard/discover/copytrader')} badge="New" variant="secondary" icon={Users} collapsed={isCollapsed} />
-            <NavItem label="Settings" href="/dashboard/settings" active={isActive('/dashboard/settings')} variant="secondary" icon={Settings} collapsed={isCollapsed} />
-            <NavItem label="Logout" onClick={handleLogout} variant="secondary" icon={LogOut} collapsed={isCollapsed} />
+            <NavItem label="CopyTrader" href="/dashboard/discover" active={isActive('/dashboard/discover/copytrader')} badge="New" variant="secondary" icon={Users} collapsed={isCollapsed} onClick={handleNavClick} />
+            <NavItem label="Settings" href="/dashboard/settings" active={isActive('/dashboard/settings')} variant="secondary" icon={Settings} collapsed={isCollapsed} onClick={handleNavClick} />
+            <NavItem label="Logout" onClick={() => { handleLogout(); handleNavClick(); }} variant="secondary" icon={LogOut} collapsed={isCollapsed} />
           </nav>
         )}
         
@@ -284,5 +343,6 @@ export const Sidebar = () => {
         onClose={() => setIsDepositModalOpen(false)}
       />
     </aside>
+    </>
   );
 };

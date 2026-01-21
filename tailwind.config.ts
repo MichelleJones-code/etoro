@@ -45,6 +45,7 @@ const config: Config = {
         sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['monospace'],
         display: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        home: ['var(--font-sofia-extra-condensed)', 'Sofia Sans Extra Condensed', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '18': '4.5rem',

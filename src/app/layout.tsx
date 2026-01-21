@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Sofia_Sans_Extra_Condensed } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
@@ -7,6 +7,13 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const sofiaSansExtraCondensed = Sofia_Sans_Extra_Condensed({
+  subsets: ["latin"],
+  weight: ["1", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"],
+  variable: "--font-sofia-extra-condensed",
   display: "swap",
 });
 
@@ -27,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${sofiaSansExtraCondensed.variable}`}>
       <body className="font-sans antialiased">
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>

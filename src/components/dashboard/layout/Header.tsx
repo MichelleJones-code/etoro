@@ -1,11 +1,24 @@
 import React from 'react';
-import { Search, Bell, Settings, HelpCircle } from 'lucide-react';
+import { Search, Bell, Settings, HelpCircle, Menu } from 'lucide-react';
 
-export const Header = () => {
+interface HeaderProps {
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
+}
+
+export const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen }: HeaderProps) => {
   return (
-    <header className="py-4 bg-white flex items-center justify-between px-8 sticky top-0 z-10">
+    <header className="py-4 bg-white flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-10">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen?.(!isMobileMenuOpen)}
+        className="lg:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors mr-2"
+        aria-label="Toggle menu"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
      
-      <div className="flex-grow max-w-sm  mx-auto">
+      <div className="flex-grow w-full max-w-full lg:max-w-sm mx-auto">
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="h-4 w-4 text-zinc-900 group-focus-within:text-[#46b445] transition-colors" />
@@ -19,7 +32,7 @@ export const Header = () => {
       </div>
 
       {/* Right Section: Actions & Settings */}
-      <div className="flex items-center gap-3 ml-4">
+      <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4">
     
 
         {/* Notifications */}
@@ -30,9 +43,9 @@ export const Header = () => {
         </div>
 
         {/* User Initials / Profile Circle */}
-        <div className="flex items-center  pl-2 border-l border-gray-200">
+        <div className="flex items-center pl-2 border-l border-gray-200">
           <div className="h-8 w-8 rounded-full bg-[#edf1f4] flex items-center justify-center text-xs font-bold text-gray-600 border border-gray-300 cursor-pointer hover:bg-gray-200 transition-colors">
-DW          </div>
+     DW          </div>
        
         </div>
       </div>
