@@ -330,6 +330,8 @@ export function generateMockTradeHistory(traderId: string): TradeHistory[] {
     const amount = Math.random() * 100 + 1
     const price = Math.random() * 500 + 50
     const totalValue = amount * price
+    const status: TradeHistory['status'] =
+      Math.random() > 0.1 ? 'completed' : (Math.random() > 0.5 ? 'pending' : 'cancelled')
 
     return {
       id: `${traderId}-trade-${index + 1}`,
@@ -339,7 +341,7 @@ export function generateMockTradeHistory(traderId: string): TradeHistory[] {
       price: Math.round(price * 100) / 100,
       totalValue: Math.round(totalValue * 100) / 100,
       timestamp: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toISOString(),
-      status: Math.random() > 0.1 ? 'completed' : (Math.random() > 0.5 ? 'pending' : 'cancelled'),
+      status,
     }
   }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
