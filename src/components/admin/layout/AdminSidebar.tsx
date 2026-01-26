@@ -2,21 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Users, 
   ShieldCheck, 
   CreditCard, 
-  BarChart3, 
   Settings, 
   LogOut,
-  AlertTriangle,
   ChevronDown,
   Copy,
-  ArrowDownCircle,
-  ArrowUpCircle
+  TrendingUp,
+  Wallet
 } from 'lucide-react';
+import { useAuthStore } from '@/lib/stores/auth';
 
 interface AdminNavItemProps {
   icon: React.ReactNode;
@@ -119,6 +118,25 @@ const AdminNavItemWithDropdown = ({ icon, label, active = false, count, children
   );
 };
 
+function LogoutButton() {
+  const router = useRouter();
+  const logout = useAuthStore((s) => s.logout);
+  const handleClick = async () => {
+    await logout();
+    router.push('/auth/login');
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className="w-full flex items-center gap-3 px-4 py-3 cursor-pointer transition-all text-gray-400 hover:bg-white/5 hover:text-white border-r-4 border-transparent"
+    >
+      <LogOut size={20} />
+      <span className="text-sm font-semibold">Logout</span>
+    </button>
+  );
+}
+
 export const AdminSidebar = () => {
   const pathname = usePathname();
 
@@ -182,6 +200,20 @@ export const AdminSidebar = () => {
             { label: 'Ongoing copytrades', href: '/admin/copytraders' }
           ]}
         />
+
+        <div className="px-4 py-2 mt-6 text-[10px] uppercase text-gray-400 font-bold tracking-widest">Investment</div>
+        <AdminNavItem 
+          icon={<TrendingUp size={20}/>} 
+          label="Investment Plans" 
+          href="/admin/investment/plans"
+          active={pathname === '/admin/investment/plans' || pathname?.startsWith('/admin/investment/plans/')}
+        />
+        <AdminNavItem 
+          icon={<Wallet size={20}/>} 
+          label="Ongoing Investments" 
+          href="/admin/investment/ongoing"
+          active={pathname === '/admin/investment/ongoing' || pathname?.startsWith('/admin/investment/ongoing/')}
+        />
       </nav>
 
       <div className="p-4 border-t border-gray-800">
@@ -191,11 +223,7 @@ export const AdminSidebar = () => {
           href="/admin/settings"
           active={pathname === '/admin/settings'}
         />
-        <AdminNavItem 
-          icon={<LogOut size={20}/>} 
-          label="Logout" 
-          href="/admin"
-        />
+        <LogoutButton />
       </div>
     </aside>
   );

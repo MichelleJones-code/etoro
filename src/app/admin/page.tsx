@@ -1,16 +1,98 @@
-import React from 'react';
-import { 
-  Users, 
-  ArrowUpRight, 
-  ArrowDownRight, 
-  DollarSign, 
-  ShieldAlert, 
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import {
+  Users,
+  DollarSign,
+  ShieldAlert,
   Activity,
   MoreVertical,
-  Search
+  Search,
 } from 'lucide-react';
+import { apiFetch } from '@/lib/api/client';
+
+type RecentUser = { id: string; name: string; email: string; joined: string; kycStatus: string };
+type RecentActivityItem = { id: string; time: string; msg: string; isAlert?: boolean };
+type HealthItem = { label: string; status: string; uptime: string; isWarning?: boolean };
+
+type DashboardData = {
+  totalUsers: number;
+  totalDeposits: number;
+  activeInvestments: number;
+  flaggedCount: number;
+  recentUsers: RecentUser[];
+  recentActivity: RecentActivityItem[];
+  systemHealth?: HealthItem[];
+};
+
+function formatTimeAgo(iso: string) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString();
+}
+
+function formatDeposits(n: number) {
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `$${(n / 1e3).toFixed(1)}K`;
+  return `$${n.toFixed(0)}`;
+}
+
+function kycToStatus(kyc: string): string {
+  if (kyc === 'approved') return 'Verified';
+  if (kyc === 'rejected') return 'Rejected';
+  if (kyc === 'pending') return 'Pending';
+  return '—';
+}
+
+function kycToVerificationPercent(kyc: string): string {
+  if (kyc === 'approved') return '100%';
+  if (kyc === 'pending') return '50%';
+  return '0%';
+}
 
 export default function AdminDashboard() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: res, res: http } = await apiFetch<DashboardData>('/api/admin/dashboard');
+        if (http.ok) setData(res);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-[1400px] mx-auto py-12 text-center text-gray-500">
+        Loading...
+      </div>
+    );
+  }
+
+  const totalUsers = data?.totalUsers ?? 0;
+  const totalDeposits = data?.totalDeposits ?? 0;
+  const activeInvestments = data?.activeInvestments ?? 0;
+  const flaggedCount = data?.flaggedCount ?? 0;
+  const recentUsers = data?.recentUsers ?? [];
+  const recentActivity = data?.recentActivity ?? [];
+  const systemHealth = data?.systemHealth ?? [
+    { label: 'API Services', status: 'Healthy', uptime: '99.98%' },
+    { label: 'Crypto Node', status: 'Syncing', uptime: '94.12%', isWarning: true },
+    { label: 'Fiat Gateway', status: 'Healthy', uptime: '100%' },
+  ];
+
   return (
     <div className="max-w-[1400px] mx-auto space-y-6 pb-12">
       {/* 1. TOP HEADER */}
@@ -22,9 +104,9 @@ export default function AdminDashboard() {
         <div className="flex gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search users or tx IDs..." 
+            <input
+              type="text"
+              placeholder="Search users or tx IDs..."
               className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-[#19be00] outline-none w-64"
             />
           </div>
@@ -36,20 +118,21 @@ export default function AdminDashboard() {
 
       {/* 2. SYSTEM STATS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Total Users" value="12,842" trend="+12%" icon={<Users className="text-blue-500" />} isUp />
-        <StatCard title="Total Deposits" value="$1.2M" trend="+5.4%" icon={<DollarSign className="text-green-500" />} isUp />
-        <StatCard title="Active Trades" value="1,402" trend="-2.1%" icon={<Activity className="text-orange-500" />} isUp={false} />
-        <StatCard title="Flagged Accounts" value="14" trend="Critical" icon={<ShieldAlert className="text-red-500" />} isWarning />
+        <StatCard title="Total Users" value={totalUsers.toLocaleString()} trend="—" icon={<Users className="text-blue-500" />} isUp />
+        <StatCard title="Total Deposits" value={formatDeposits(totalDeposits)} trend="—" icon={<DollarSign className="text-green-500" />} isUp />
+        <StatCard title="Active Investments" value={activeInvestments.toLocaleString()} trend="—" icon={<Activity className="text-orange-500" />} isUp />
+        <StatCard title="Flagged Accounts" value={flaggedCount.toString()} trend={flaggedCount > 0 ? 'Critical' : '—'} icon={<ShieldAlert className="text-red-500" />} isWarning={flaggedCount > 0} />
       </div>
 
       {/* 3. MAIN CONTENT: USER TABLE & RECENT ACTIVITY */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
         {/* Recent User Management Table */}
         <div className="xl:col-span-2 bg-white rounded-lg border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-50 flex justify-between items-center">
             <h2 className="font-bold text-[#1e272e]">Recent Registrations</h2>
-            <button className="text-sm text-[#4ba3f5] font-bold">View All</button>
+            <Link href="/admin/users" className="text-sm text-[#4ba3f5] font-bold">
+              View All
+            </Link>
           </div>
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-50/50">
@@ -61,9 +144,24 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              <UserRow name="Roy Banks" email="roybanks298@gmail.com" status="Active" verification="30%" />
-              <UserRow name="Sarah Connor" email="s.connor@sky.net" status="Pending" verification="100%" />
-              <UserRow name="James Smith" email="jsmith@web.com" status="Banned" verification="0%" />
+              {recentUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    No recent registrations.
+                  </td>
+                </tr>
+              ) : (
+                recentUsers.map((u) => (
+                  <UserRow
+                    key={u.id}
+                    id={u.id}
+                    name={u.name}
+                    email={u.email}
+                    status={kycToStatus(u.kycStatus)}
+                    verification={kycToVerificationPercent(u.kycStatus)}
+                  />
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -72,34 +170,45 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-lg border border-gray-100 p-6">
           <h2 className="font-bold text-[#1e272e] mb-6">System Health</h2>
           <div className="space-y-6">
-            <HealthItem label="API Services" status="Healthy" uptime="99.98%" />
-            <HealthItem label="Crypto Node" status="Syncing" uptime="94.12%" isWarning />
-            <HealthItem label="Fiat Gateway" status="Healthy" uptime="100%" />
+            {systemHealth.map((h) => (
+              <HealthItem
+                key={h.label}
+                label={h.label}
+                status={h.status}
+                uptime={h.uptime}
+                isWarning={h.isWarning}
+              />
+            ))}
           </div>
           <div className="mt-8 pt-6 border-t border-gray-50">
-             <div className="text-xs font-bold text-gray-400 uppercase mb-4">Live Event Log</div>
-             <div className="space-y-3">
-                <LogEntry time="2m ago" msg="New deposit of $500.00 by ID #881" />
-                <LogEntry time="5m ago" msg="BTC withdrawal request flagged for review" isAlert />
-             </div>
+            <div className="text-xs font-bold text-gray-400 uppercase mb-4">Live Event Log</div>
+            <div className="space-y-3">
+              {recentActivity.length === 0 ? (
+                <div className="text-xs text-gray-500">No recent activity.</div>
+              ) : (
+                recentActivity.map((a) => (
+                  <LogEntry
+                    key={a.id}
+                    time={formatTimeAgo(a.time)}
+                    msg={a.msg}
+                    isAlert={a.isAlert}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
 
-{/* UI HELPERS */}
-
-function StatCard({ title, value, trend, icon, isUp, isWarning }: any) {
+function StatCard({ title, value, trend, icon, isUp, isWarning }: { title: string; value: string; trend: string; icon: React.ReactNode; isUp?: boolean; isWarning?: boolean }) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-100">
       <div className="flex justify-between items-start mb-4">
         <div className="p-2 bg-gray-50 rounded-lg">{icon}</div>
-        <div className={`text-xs font-bold px-2 py-1 rounded-full ${
-          isWarning ? 'bg-red-50 text-red-600' : isUp ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-        }`}>
+        <div className={`text-xs font-bold px-2 py-1 rounded-full ${isWarning ? 'bg-red-50 text-red-600' : isUp ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
           {trend}
         </div>
       </div>
@@ -109,22 +218,26 @@ function StatCard({ title, value, trend, icon, isUp, isWarning }: any) {
   );
 }
 
-function UserRow({ name, email, status, verification }: any) {
+function UserRow({ id, name, email, status, verification }: { id: string; name: string; email: string; status: string; verification: string }) {
   return (
     <tr className="hover:bg-gray-50/50">
       <td className="px-6 py-4">
-        <div className="flex items-center gap-3">
+        <Link href={`/admin/users/${id}`} className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gray-100" />
           <div>
             <div className="text-sm font-bold text-[#1e272e]">{name}</div>
             <div className="text-xs text-gray-400">{email}</div>
           </div>
-        </div>
+        </Link>
       </td>
       <td className="px-6 py-4">
-        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-          status === 'Active' ? 'bg-green-100 text-green-700' : status === 'Banned' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
-        }`}>{status}</span>
+        <span
+          className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+            status === 'Verified' ? 'bg-green-100 text-green-700' : status === 'Rejected' ? 'bg-red-100 text-red-700' : status === 'Pending' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
+          }`}
+        >
+          {status}
+        </span>
       </td>
       <td className="px-6 py-4">
         <div className="w-24 mx-auto bg-gray-100 h-1.5 rounded-full">
@@ -132,13 +245,17 @@ function UserRow({ name, email, status, verification }: any) {
         </div>
       </td>
       <td className="px-6 py-4 text-right">
-        <button className="text-gray-400 hover:text-gray-600"><MoreVertical size={16}/></button>
+        <Link href={`/admin/users/${id}`}>
+          <button className="text-gray-400 hover:text-gray-600">
+            <MoreVertical size={16} />
+          </button>
+        </Link>
       </td>
     </tr>
   );
 }
 
-function HealthItem({ label, status, uptime, isWarning }: any) {
+function HealthItem({ label, status, uptime, isWarning }: { label: string; status: string; uptime: string; isWarning?: boolean }) {
   return (
     <div className="flex justify-between items-center">
       <div>
@@ -153,11 +270,11 @@ function HealthItem({ label, status, uptime, isWarning }: any) {
   );
 }
 
-function LogEntry({ time, msg, isAlert }: any) {
+function LogEntry({ time, msg, isAlert }: { time: string; msg: string; isAlert?: boolean }) {
   return (
     <div className="flex gap-3 text-xs">
       <span className="text-gray-400 whitespace-nowrap">{time}</span>
-      <span className={`${isAlert ? 'text-red-500 font-medium' : 'text-gray-600'}`}>{msg}</span>
+      <span className={isAlert ? 'text-red-500 font-medium' : 'text-gray-600'}>{msg}</span>
     </div>
   );
 }

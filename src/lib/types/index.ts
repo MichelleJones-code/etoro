@@ -1,3 +1,6 @@
+export type KYCStatus = 'none' | 'pending' | 'approved' | 'rejected';
+export type UserRole = 'user' | 'admin';
+
 export interface User {
   id: string;
   email: string;
@@ -10,6 +13,8 @@ export interface User {
   country: string;
   currency: string;
   isPremium: boolean;
+  role?: UserRole;
+  kycStatus?: KYCStatus;
 }
 
 export interface MarketData {
@@ -161,4 +166,30 @@ export interface TradeHistory {
   totalValue: number;
   timestamp: string;
   status: 'completed' | 'pending' | 'cancelled';
+}
+
+export interface InvestmentPlan {
+  id: string;
+  name: string;
+  description: string;
+  roiPercent: number;
+  durationMonths: number;
+  minAmount: number;
+  maxAmount?: number;
+  riskLevel?: 'low' | 'medium' | 'high';
+}
+
+export interface OngoingInvestment {
+  id: string;
+  userId: string;
+  planId: string;
+  planName: string;
+  amount: number;
+  startDate: string;
+  endDate: string;
+  status: 'active' | 'completed' | 'cancelled';
+  accruedProfit: number;
+  nextPayoutDate?: string;
+  nextPayoutAmount?: number;
+  roiPercent: number;
 }

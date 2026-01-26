@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { 
@@ -7,8 +9,13 @@ import {
   Image as ImageIcon, 
   BarChart2 
 } from 'lucide-react';
+import { useAuthStore } from '@/lib/stores/auth';
 
 export default function DashboardPage() {
+  const user = useAuthStore((s) => s.user);
+  const kycStatus = user?.kycStatus ?? 'none';
+  const avatarSrc = user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username || 'default'}`;
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 px-4 sm:px-6 lg:px-0">
       
@@ -16,38 +23,62 @@ export default function DashboardPage() {
       <section className="bg-white rounded-xl pr-4 sm:pr-6 lg:pr-10 overflow-hidden flex items-center flex-col lg:flex-row">
         {/* Progress Details */}
         <div className="flex-1 p-4 sm:p-6 lg:p-8 lg:p-12">
-          {/* Step Bubbles */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-[#46b445] w-6 h-6" />
-              <div className="h-[1px] w-10 bg-gray-200" />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs font-bold text-gray-400">
-                2
+          {kycStatus === 'approved' ? (
+            <>
+              <div className="flex items-center gap-2 mb-4">
+                <CheckCircle2 className="text-[#46b445] w-8 h-8" />
+                <span className="text-[#46b445] font-bold text-lg">Identity verified</span>
               </div>
-              <div className="h-[1px] w-10 bg-gray-200" />
-            </div>
-            <div className="w-7 h-7 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs font-bold text-gray-400">
-              3
-            </div>
-          </div>
+              <p className="font-light text-gray-600">Your account is verified. You&apos;re ready to trade.</p>
+            </>
+          ) : kycStatus === 'pending' ? (
+            <>
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-7 h-7 rounded-full border-2 border-amber-400 flex items-center justify-center text-xs font-bold text-amber-600">!</div>
+                <span className="font-semibold text-amber-700">Under review</span>
+              </div>
+              <h1 className="text-2xl tracking-tight font-bold text-[#1e272e] mb-4">Verification in progress</h1>
+              <p className="font-light tracking-tight leading-relaxed mb-8 max-w-md">
+                We&apos;re reviewing your documents. We&apos;ll notify you once verification is complete.
+              </p>
+              <Link href="/dashboard/kyc">
+                <span className="inline-block text-sm text-gray-500 cursor-default">View submission</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              {/* Step Bubbles */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="text-[#46b445] w-6 h-6" />
+                  <div className="h-[1px] w-10 bg-gray-200" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs font-bold text-gray-400">2</div>
+                  <div className="h-[1px] w-10 bg-gray-200" />
+                </div>
+                <div className="w-7 h-7 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs font-bold text-gray-400">3</div>
+              </div>
 
-          <h1 className="text-2xl tracking-tight font-bold text-[#1e272e] mb-4">
-            You're almost ready to trade
-          </h1>
-          <p className="font-light tracking-tight leading-tight  leading-relaxed mb-8 max-w-md">
-            Verifying your identity helps us prevent someone else from creating an account in your name.
-          </p>
+              <h1 className="text-2xl tracking-tight font-bold text-[#1e272e] mb-4">
+                You&apos;re almost ready to trade
+              </h1>
+              <p className="font-light tracking-tight leading-tight leading-relaxed mb-8 max-w-md">
+                Verifying your identity helps us prevent someone else from creating an account in your name.
+              </p>
 
-          <Link href="/dashboard/kyc">
-            <button className="bg-[#19be00] hover:bg-[#15a300] tracking-tight text-white font-bold py-2 px-5 rounded-full transition-all  active:scale-95">
-              Verify Your Account
-            </button>
-          </Link>
+              <Link href="/dashboard/kyc">
+                <button className="bg-[#19be00] hover:bg-[#15a300] tracking-tight text-white font-bold py-2 px-5 rounded-full transition-all active:scale-95">
+                  Verify Your Account
+                </button>
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Video Thumbnail Section */}
+        {/* Video Thumbnail Section - hide when approved */}
+        {kycStatus !== 'approved' && (
+        <>
         <div className="w-full h-48 sm:h-56 lg:h-48 rounded-2xl max-w-xs mx-auto lg:mx-0 relative group cursor-pointer overflow-hidden">
           <img 
             src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800" 
@@ -78,6 +109,8 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </section>
 
       {/* 2. LOWER CONTENT GRID */}
@@ -89,8 +122,8 @@ export default function DashboardPage() {
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-sm overflow-hidden bg-gray-100 shrink-0">
                 <img 
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Roy" 
-                  alt="Roy" 
+                  src={avatarSrc} 
+                  alt="" 
                   className="w-full h-full object-cover"
                 />
               </div>

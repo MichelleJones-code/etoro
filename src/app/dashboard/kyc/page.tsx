@@ -58,9 +58,40 @@ export default function KYCVerificationPage() {
     }
   };
 
-  const handleSubmit = () => {
-    // Handle KYC submission
-    console.log('Submitting KYC verification...', { formData, docType, docFront, docBack, selfie });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!docFront || !selfie || (docType !== 'passport' && !docBack)) return;
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      const fd = new FormData();
+      fd.append('firstName', formData.firstName);
+      fd.append('lastName', formData.lastName);
+      fd.append('dateOfBirth', formData.dateOfBirth);
+      fd.append('nationality', formData.nationality);
+      fd.append('address', formData.address);
+      fd.append('city', formData.city);
+      fd.append('postalCode', formData.postalCode);
+      fd.append('country', formData.country);
+      fd.append('documentType', docType);
+      fd.append('docFront', docFront);
+      if (docBack) fd.append('docBack', docBack);
+      fd.append('selfie', selfie);
+      const res = await fetch('/api/kyc', { method: 'POST', credentials: 'include', body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setSubmitError((data as { error?: string }).error || 'Submission failed');
+        return;
+      }
+      setSubmitSuccess(true);
+    } catch {
+      setSubmitError('Submission failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -152,6 +183,9 @@ export default function KYCVerificationPage() {
             docBack={docBack}
             selfie={selfie}
             onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            submitSuccess={submitSuccess}
           />
         )}
       </div>
@@ -496,14 +530,20 @@ function ReviewStep({
   docFront,
   docBack,
   selfie,
-  onSubmit
+  onSubmit,
+  isSubmitting,
+  submitError,
+  submitSuccess,
 }: {
-  formData: any;
+  formData: { firstName: string; lastName: string; dateOfBirth: string; nationality: string; address: string; city: string; postalCode: string; country: string };
   docType: DocumentType;
   docFront: File | null;
   docBack: File | null;
   selfie: File | null;
   onSubmit: () => void;
+  isSubmitting?: boolean;
+  submitError?: string;
+  submitSuccess?: boolean;
 }) {
   const getDocTypeLabel = (type: DocumentType) => {
     const labels = {
@@ -514,6 +554,16 @@ function ReviewStep({
     return labels[type];
   };
 
+  if (submitSuccess) {
+    return (
+      <div className="space-y-6 text-center py-8">
+        <CheckCircle2 className="w-16 h-16 text-[#46b445] mx-auto" />
+        <h2 className="text-xl font-bold text-[#1e272e]">Verification Submitted</h2>
+        <p className="text-gray-600">Your identity verification has been submitted. We will review it and notify you once approved.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -522,6 +572,9 @@ function ReviewStep({
           Please review all information before submitting. This process cannot be undone.
         </p>
       </div>
+      {submitError && (
+        <div className="text-sm text-red-600 bg-red-50 px-4 py-2 rounded-lg">{submitError}</div>
+      )}
 
       {/* Personal Information Review */}
       <div className="border border-gray-200 rounded-lg p-6">
@@ -595,10 +648,11 @@ function ReviewStep({
       <div className="flex justify-end pt-4">
         <button
           onClick={onSubmit}
-          className="bg-[#19be00] hover:bg-[#15a300] text-white font-bold py-3 px-8 rounded-full transition-all active:scale-95 flex items-center gap-2"
+          disabled={isSubmitting}
+          className="bg-[#19be00] hover:bg-[#15a300] disabled:opacity-70 text-white font-bold py-3 px-8 rounded-full transition-all active:scale-95 flex items-center gap-2"
         >
           <ShieldCheck className="w-5 h-5" />
-          Submit Verification
+          {isSubmitting ? 'Submitting...' : 'Submit Verification'}
         </button>
       </div>
     </div>

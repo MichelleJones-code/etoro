@@ -1,7 +1,19 @@
-import React from 'react';
-import { ChevronRight, Shield, Monitor, Smartphone, ExternalLink } from 'lucide-react';
+'use client';
+
+import React, { useEffect } from 'react';
+import { Monitor } from 'lucide-react';
+import { useAuthStore } from '@/lib/stores/auth';
 
 export default function SettingsPage() {
+  const user = useAuthStore((s) => s.user);
+  const fetchMe = useAuthStore((s) => s.fetchMe);
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  const clubTier = user ? (user.isPremium ? 'SILVER' : 'BRONZE') : null;
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
       
@@ -13,16 +25,16 @@ export default function SettingsPage() {
         
         <div className="relative z-10">
           <p className=" text-gray-800 font-light tracking-tight ">Your current Club tier</p>
-          <h1 className="text-4xl  tracking-tight text-[#1e272e] mb-6">BRONZE</h1>
+          <h1 className="text-4xl  tracking-tight text-[#1e272e] mb-6">{clubTier ?? '—'}</h1>
           
           {/* Progress Line */}
           <div className="max-w-md mx-auto flex items-center justify-between mb-8 relative">
             <div className="absolute h-[2px] bg-gray-200 w-full top-1/2 -translate-y-1/2 z-0" />
-            <TierNode active />
-            <TierNode />
-            <TierNode color="bg-yellow-400" />
-            <TierNode />
-            <TierNode />
+            <TierNode active={clubTier === 'BRONZE'} />
+            <TierNode active={clubTier === 'SILVER'} color="bg-yellow-400" />
+            <TierNode color="bg-gray-200" />
+            <TierNode color="bg-gray-200" />
+            <TierNode color="bg-gray-200" />
             <TierNode color="bg-blue-600" />
           </div>
           
@@ -42,8 +54,8 @@ export default function SettingsPage() {
           <div className="bg-white rounded-lg ">
             <div className="pt-6 px-6 font-semibold text-[#1e272e]">Credentials</div>
             <div className="p-6 space-y-8">
-              <CredentialItem label="USERNAME" value="roybanks298" />
-              <CredentialItem label="EMAIL (VERIFIED)" value="roybanks298@gmail.com" action="Change" />
+              <CredentialItem label="USERNAME" value={user?.username ?? '—'} />
+              <CredentialItem label={user?.verified ? 'EMAIL (VERIFIED)' : 'EMAIL (UNVERIFIED)'} value={user?.email ?? '—'} action="Change" />
               <CredentialItem label="PASSWORD" value="**********" action="Change" />
               <CredentialItem label="PHONE" value="" action="Add" />
               <div className="flex justify-between items-center pt-2">
@@ -141,7 +153,7 @@ function CredentialItem({ label, value, action }: { label: string, value: string
         <div className="text-xs font-light text-gray-600 uppercase tracking-tight">{label}</div>
       </div>
       {action && (
-        <button className="border border-[#4ba3f5]! text-[#4ba3f5] px-8 py-1.5 rounded text-sm tracking-tight font-semibold  hover:bg-blue-50 transition-colors">
+        <button className="border border-[#4ba3f5] text-[#4ba3f5] px-8 py-1.5 rounded text-sm tracking-tight font-semibold  hover:bg-blue-50 transition-colors">
           {action}
         </button>
       )}
@@ -153,7 +165,7 @@ function DocumentRow({ label }: { label: string }) {
   return (
     <div className="flex justify-between items-center">
       <span className=" tracking-tight font-light text-gray-700">{label}</span>
-      <button className="border border-[#4ba3f5]! text-[#4ba3f5] px-8 py-1.5 rounded text-sm font-semibold hover:bg-blue-50 transition-colors">
+      <button className="border border-[#4ba3f5] text-[#4ba3f5] px-8 py-1.5 rounded text-sm font-semibold hover:bg-blue-50 transition-colors">
         View
       </button>
     </div>

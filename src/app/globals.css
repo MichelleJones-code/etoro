@@ -62,6 +62,10 @@
   border-color: hsl(var(--border));
 }
 
+html, body {
+  min-height: 100vh;
+}
+
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));

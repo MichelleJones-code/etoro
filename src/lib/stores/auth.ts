@@ -1,114 +1,103 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import type { User } from '@/lib/types'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { User } from '@/lib/types';
+import { apiFetch } from '@/lib/api/client';
 
 interface AuthState {
-  user: User | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  login: (email: string, password: string) => Promise<boolean>
-  logout: () => void
+  user: User | null;
+  isAuthenticated: boolean;
+  hasCheckedAuth: boolean;
+  isLoading: boolean;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
   register: (userData: {
-    email: string
-    username: string
-    firstName: string
-    lastName: string
-    password: string
-  }) => Promise<boolean>
-  updateProfile: (updates: Partial<User>) => void
+    email: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+  }) => Promise<boolean>;
+  fetchMe: () => Promise<void>;
+  updateProfile: (updates: Partial<User>) => void;
 }
-
-// Mock user database
-const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'demo@etoro.com',
-    username: 'demo_trader',
-    firstName: 'Demo',
-    lastName: 'Trader',
-    verified: true,
-    joinDate: '2023-01-15',
-    country: 'United States',
-    currency: 'USD',
-    isPremium: false,
-  },
-]
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
+      hasCheckedAuth: false,
       isLoading: false,
 
-      login: async (email: string, password: string) => {
-        set({ isLoading: true })
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        const user = mockUsers.find(u => u.email === email)
-        
-        if (user && password === 'demo123') {
-          set({
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-          })
-          return true
+      login: async (emailOrUsername: string, password: string) => {
+        set({ isLoading: true });
+        try {
+          const { data, res } = await apiFetch<{ user: User } | { error: string }>(
+            '/api/auth/login',
+            { method: 'POST', body: { emailOrUsername, password } }
+          );
+          if (!res.ok) {
+            set({ isLoading: false });
+            return false;
+          }
+          const { user } = data as { user: User };
+          set({ user, isAuthenticated: true, isLoading: false });
+          return true;
+        } catch {
+          set({ isLoading: false });
+          return false;
         }
-        
-        set({ isLoading: false })
-        return false
       },
 
-      logout: () => {
-        set({
-          user: null,
-          isAuthenticated: false,
-        })
+      logout: async () => {
+        try {
+          await apiFetch('/api/auth/logout', { method: 'POST' });
+        } finally {
+          set({ user: null, isAuthenticated: false });
+        }
       },
 
       register: async (userData) => {
-        set({ isLoading: true })
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        const newUser: User = {
-          id: Date.now().toString(),
-          email: userData.email,
-          username: userData.username,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          verified: false,
-          joinDate: new Date().toISOString().split('T')[0],
-          country: 'United States',
-          currency: 'USD',
-          isPremium: false,
+        set({ isLoading: true });
+        try {
+          const { data, res } = await apiFetch<{ user: User } | { error: string }>(
+            '/api/auth/signup',
+            { method: 'POST', body: userData }
+          );
+          if (!res.ok) {
+            set({ isLoading: false });
+            return false;
+          }
+          const { user } = data as { user: User };
+          set({ user, isAuthenticated: true, isLoading: false });
+          return true;
+        } catch {
+          set({ isLoading: false });
+          return false;
         }
-        
-        mockUsers.push(newUser)
-        
-        set({
-          user: newUser,
-          isAuthenticated: true,
-          isLoading: false,
-        })
-        
-        return true
+      },
+
+      fetchMe: async () => {
+        try {
+          const { data, res } = await apiFetch<{ user: User } | { error: string }>('/api/auth/me');
+          if (res.ok) {
+            const { user } = data as { user: User };
+            set({ user, isAuthenticated: true, hasCheckedAuth: true });
+          } else {
+            set({ user: null, isAuthenticated: false, hasCheckedAuth: true });
+          }
+        } catch {
+          set({ user: null, isAuthenticated: false, hasCheckedAuth: true });
+        }
       },
 
       updateProfile: (updates: Partial<User>) => {
-        const { user } = get()
+        const { user } = get();
         if (user) {
-          const updatedUser = { ...user, ...updates }
-          set({ user: updatedUser })
+          set({ user: { ...user, ...updates } });
         }
       },
     }),
-    {
-      name: 'etoro-auth',
-    }
+    { name: 'etoro-auth', partialize: (s) => ({ user: s.user, isAuthenticated: s.isAuthenticated }) }
   )
-)
+);

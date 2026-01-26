@@ -1,6 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
-import { X, CheckCircle2, User, Percent, Settings } from 'lucide-react';
+import { X, CheckCircle2, Percent, Settings } from 'lucide-react';
 import type { CopyTrader } from '@/lib/types';
+import { apiFetch } from '@/lib/api/client';
 
 interface CopyTraderModalProps {
   isOpen: boolean;
@@ -16,14 +19,16 @@ export const CopyTraderModal: React.FC<CopyTraderModalProps> = ({ isOpen, onClos
   const [allocationPercent, setAllocationPercent] = useState<string>('10');
   const [autoCopy, setAutoCopy] = useState<boolean>(true);
   const [copyOpenPositions, setCopyOpenPositions] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleClose = () => {
-    // Reset state when closing to start fresh next time
     setStep(1);
     setAmount('1000');
     setAllocationPercent('10');
     setAutoCopy(true);
     setCopyOpenPositions(false);
+    setError('');
     onClose();
   };
 
@@ -38,8 +43,33 @@ export const CopyTraderModal: React.FC<CopyTraderModalProps> = ({ isOpen, onClos
     setStep(2);
   };
 
-  const handleSubmit = () => {
-    setStep(3);
+  const handleSubmit = async () => {
+    if (!trader) return;
+    setIsSubmitting(true);
+    setError('');
+    try {
+      const { data, res } = await apiFetch<{ relationship?: unknown } | { error?: string }>(
+        `/api/copytraders/${trader.id}/copy`,
+        {
+          method: 'POST',
+          body: {
+            amount: parseFloat(amount) || 1000,
+            allocationPercent: parseFloat(allocationPercent) || 10,
+            autoCopy,
+            copyOpenPositions,
+          },
+        }
+      );
+      if (!res.ok) {
+        setError((data as { error?: string }).error || 'Failed to start copying');
+        return;
+      }
+      setStep(3);
+    } catch {
+      setError('Failed to start copying. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen || !trader) return null;
@@ -151,8 +181,11 @@ export const CopyTraderModal: React.FC<CopyTraderModalProps> = ({ isOpen, onClos
                 Configure your copy settings
               </h2>
               <p className="text-xs text-center text-gray-500 mb-4">
-                Customize how you want to copy this trader's portfolio.
+                Customize how you want to copy this trader&apos;s portfolio.
               </p>
+              {error && (
+                <div className="text-sm text-red-600 bg-red-50 px-4 py-2 rounded-lg">{error}</div>
+              )}
 
               <div className="space-y-4">
                 {/* Allocation Percentage */}
@@ -269,9 +302,10 @@ export const CopyTraderModal: React.FC<CopyTraderModalProps> = ({ isOpen, onClos
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-20 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
+              disabled={isSubmitting}
+              className="px-20 bg-green-600 hover:bg-green-700 disabled:opacity-70 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
             >
-              Start Copying
+              {isSubmitting ? 'Processing...' : 'Start Copying'}
             </button>
           )}
           {step === 3 && (

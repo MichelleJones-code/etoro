@@ -19,13 +19,12 @@ import {
   BarChart3,
   ThumbsUp
 } from 'lucide-react';
-import { generateMockCopyTraders, generateMockReviews, generateMockTradeHistory } from '@/data/mockData';
 import type { CopyTrader, Review, TradeHistory } from '@/lib/types';
 import { CopyTraderModal } from '@/components/dashboard/sections/CopyTraderModal';
+import { apiFetch } from '@/lib/api/client';
 
 export default function CopyTraderDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const traderId = params.id as string;
   const [trader, setTrader] = useState<CopyTrader | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -36,21 +35,28 @@ export default function CopyTraderDetailPage() {
   const [isWatched, setIsWatched] = useState(false);
 
   useEffect(() => {
-    // Simulate loading
-    setIsLoading(true);
-    
-    // Get trader data
-    const traders = generateMockCopyTraders();
-    const foundTrader = traders.find(t => t.id === traderId) || traders[0];
-    setTrader(foundTrader);
-
-    // Generate reviews and trade history
-    if (foundTrader) {
-      setReviews(generateMockReviews(foundTrader.id));
-      setTradeHistory(generateMockTradeHistory(foundTrader.id));
-    }
-
-    setTimeout(() => setIsLoading(false), 500);
+    if (!traderId) return;
+    (async () => {
+      setIsLoading(true);
+      try {
+        const [traderRes, reviewsRes, tradesRes] = await Promise.all([
+          apiFetch<CopyTrader | { error?: string }>(`/api/copytraders/${traderId}`),
+          apiFetch<Review[] | { error?: string }>(`/api/copytraders/${traderId}/reviews`),
+          apiFetch<TradeHistory[] | { error?: string }>(`/api/copytraders/${traderId}/trades`),
+        ]);
+        if (traderRes.res.ok && !('error' in (traderRes.data as object))) {
+          setTrader(traderRes.data as CopyTrader);
+        }
+        if (reviewsRes.res.ok && Array.isArray(reviewsRes.data)) {
+          setReviews(reviewsRes.data);
+        }
+        if (tradesRes.res.ok && Array.isArray(tradesRes.data)) {
+          setTradeHistory(tradesRes.data);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, [traderId]);
 
   const formatDate = (dateString: string): string => {

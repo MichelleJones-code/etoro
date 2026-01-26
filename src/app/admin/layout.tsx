@@ -1,4 +1,5 @@
 import React from 'react';
+import { AdminAuthGuard } from '@/components/admin/AdminAuthGuard';
 import { AdminSidebar } from '@/components/admin/layout/AdminSidebar';
 import { AdminHeader } from '@/components/admin/layout/AdminHeader';
 
@@ -6,6 +7,7 @@ import { AdminHeader } from '@/components/admin/layout/AdminHeader';
  * AdminLayout handles the structural shell for all /admin routes.
  * It uses a flex container to keep the sidebar fixed to the left
  * and a nested flex column for the header and scrollable content.
+ * Wrapped in AdminAuthGuard so only authenticated admins can access.
  */
 export default function AdminLayout({
   children,
@@ -13,6 +15,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
+    <AdminAuthGuard>
     <div className="flex h-screen bg-[#f8fafc] overflow-hidden font-sans">
       {/* 1. FIXED LEFT SIDEBAR */}
       <AdminSidebar />
@@ -42,5 +45,6 @@ export default function AdminLayout({
         </footer>
       </div>
     </div>
+    </AdminAuthGuard>
   );
 }

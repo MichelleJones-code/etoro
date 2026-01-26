@@ -1,19 +1,24 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Info, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { apiFetch } from '@/lib/api/client';
 
 interface GlobalMarketData {
   total_market_cap: { usd: number };
   market_cap_change_percentage_24h_usd: number;
 }
 
+type CopyTraderItem = { id: string; username: string; avatar: string; yearlyGain: number };
+
 export default function DiscoverPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'crypto' | 'copytrader'>('overview');
   const [cryptoCarouselIndex, setCryptoCarouselIndex] = useState(0);
   const [marketCapData, setMarketCapData] = useState<GlobalMarketData | null>(null);
   const [isLoadingMarketCap, setIsLoadingMarketCap] = useState(true);
+  const [copytraders, setCopytraders] = useState<CopyTraderItem[]>([]);
+  const [loadingCopytraders, setLoadingCopytraders] = useState(true);
   
   const cryptoCards = [
     { symbol: "BTC", name: "Bitcoin", price: "93031.66", change: "-2.46%", color: "bg-[#f7931a]", logo: "/dash/bitcoin.svg" },
@@ -74,6 +79,17 @@ export default function DiscoverPage() {
     };
 
     fetchMarketCapData();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data, res } = await apiFetch<CopyTraderItem[]>('/api/copytraders');
+        if (res.ok && Array.isArray(data)) setCopytraders(data);
+      } finally {
+        setLoadingCopytraders(false);
+      }
+    })();
   }, []);
 
   return (
@@ -143,44 +159,22 @@ export default function DiscoverPage() {
             </div>
 
             {/* Trader Grid */}
+            {loadingCopytraders ? (
+              <div className="py-8 text-center text-gray-500">Loading traders...</div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <TraderCard 
-                name="ESDRAS Vasquez" 
-                username="ESDRASVasquez" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=ESDRAS" 
-                returnPercent="52.48"
-              />
-              <TraderCard 
-                name="Jeppe Kirk Bonde" 
-                username="JeppeKirkBonde" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=Jeppe" 
-                returnPercent="34.21"
-              />
-              <TraderCard 
-                name="CPH Equities" 
-                username="CPHequities" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=CPH" 
-                returnPercent="28.93"
-              />
-              <TraderCard 
-                name="Wesley Trader" 
-                username="Wesl3y" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=Wes" 
-                returnPercent="41.67"
-              />
-              <TraderCard 
-                name="Ruby Mza" 
-                username="Rubymza" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=Ruby" 
-                returnPercent="36.52"
-              />
-              <TraderCard 
-                name="Balance Investing" 
-                username="BalanceInvesting" 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=Balance" 
-                returnPercent="31.84"
-              />
+              {copytraders.map((t) => (
+                <TraderCard
+                  key={t.id}
+                  id={t.id}
+                  name={t.username}
+                  username={t.username}
+                  image={t.avatar}
+                  returnPercent={t.yearlyGain.toFixed(2)}
+                />
+              ))}
             </div>
+            )}
           </section>
         </>
       )}
@@ -293,44 +287,22 @@ export default function DiscoverPage() {
           </div>
 
           {/* Trader Grid */}
+          {loadingCopytraders ? (
+            <div className="py-8 text-center text-gray-500">Loading traders...</div>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <TraderCard 
-              name="ESDRAS Vasquez" 
-              username="ESDRASVasquez" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=ESDRAS" 
-              returnPercent="52.48"
-            />
-            <TraderCard 
-              name="Jeppe Kirk Bonde" 
-              username="JeppeKirkBonde" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=Jeppe" 
-              returnPercent="34.21"
-            />
-            <TraderCard 
-              name="CPH Equities" 
-              username="CPHequities" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=CPH" 
-              returnPercent="28.93"
-            />
-            <TraderCard 
-              name="Wesley Trader" 
-              username="Wesl3y" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=Wes" 
-              returnPercent="41.67"
-            />
-            <TraderCard 
-              name="Ruby Mza" 
-              username="Rubymza" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=Ruby" 
-              returnPercent="36.52"
-            />
-            <TraderCard 
-              name="Balance Investing" 
-              username="BalanceInvesting" 
-              image="https://api.dicebear.com/7.x/avataaars/svg?seed=Balance" 
-              returnPercent="31.84"
-            />
+            {copytraders.map((t) => (
+              <TraderCard
+                key={t.id}
+                id={t.id}
+                name={t.username}
+                username={t.username}
+                image={t.avatar}
+                returnPercent={t.yearlyGain.toFixed(2)}
+              />
+            ))}
           </div>
+          )}
         </section>
       )}
     </div>
@@ -452,9 +424,8 @@ function TraderCard({ name, username, image, returnPercent, id }: { name: string
   );
 }
 
-// Helper function to generate trader ID from username (matching mock data pattern)
+// Helper: fallback trader ID when API does not provide id (e.g. from cached or legacy data)
 function generateTraderIdFromUsername(username: string): string {
-  // Map known usernames to IDs (matching the pattern in generateMockCopyTraders)
   const usernameToId: Record<string, string> = {
     'ESDRASVasquez': '1',
     'JeppeKirkBonde': '2',

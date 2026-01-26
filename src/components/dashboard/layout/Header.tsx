@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { Search, Bell, Settings, HelpCircle, Menu } from 'lucide-react';
+import { Search, Bell, Menu } from 'lucide-react';
+import { useAuthStore } from '@/lib/stores/auth';
 
 interface HeaderProps {
   isMobileMenuOpen?: boolean;
@@ -7,6 +10,11 @@ interface HeaderProps {
 }
 
 export const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen }: HeaderProps) => {
+  const user = useAuthStore((s) => s.user);
+  const initials = user?.firstName && user?.lastName
+    ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+    : (user?.username?.slice(0, 2) || '??').toUpperCase();
+
   return (
     <header className="py-4 bg-white flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-10">
       {/* Mobile Menu Button */}
@@ -45,8 +53,8 @@ export const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen }: HeaderProps) =
         {/* User Initials / Profile Circle */}
         <div className="flex items-center pl-2 border-l border-gray-200">
           <div className="h-8 w-8 rounded-full bg-[#edf1f4] flex items-center justify-center text-xs font-bold text-gray-600 border border-gray-300 cursor-pointer hover:bg-gray-200 transition-colors">
-     DW          </div>
-       
+            {initials}
+          </div>
         </div>
       </div>
     </header>

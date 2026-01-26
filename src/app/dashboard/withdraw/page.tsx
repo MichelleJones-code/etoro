@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { Minus, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Minus } from 'lucide-react';
+import { AvailableBalanceCard } from '@/components/dashboard/sections/AvailableBalanceCard';
 import { WithdrawalModal } from '@/components/dashboard/sections/WithdrawalModal';
-import { useMarketStore } from '@/lib/stores/market';
-import { formatCurrency, getRelativeTime } from '@/lib/utils';
+import { apiFetch } from '@/lib/api/client';
+import { formatCurrency } from '@/lib/utils';
 import {
   Table,
   TableBody,
@@ -14,17 +15,26 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+type WithdrawalRow = { id: string; type: string; amount: number; currency: string; description: string; timestamp: string; status: string };
+
 export default function WithdrawPage() {
   const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
-  const availableBalance = useMarketStore((state) => state.portfolio.availableBalance);
-  const transactions = useMarketStore((state) => state.transactions);
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
 
-  // Filter and sort withdrawals
-  const withdrawals = useMemo(() => {
-    return transactions
-      .filter((t) => t.type === 'withdraw')
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [transactions]);
+  const fetchWithdrawals = React.useCallback(async () => {
+    try {
+      const { data, res } = await apiFetch<{ transactions?: WithdrawalRow[] } | { error?: string }>('/api/transactions?type=withdraw');
+      if (res.ok && Array.isArray((data as { transactions?: WithdrawalRow[] }).transactions)) {
+        setWithdrawals((data as { transactions: WithdrawalRow[] }).transactions);
+      }
+    } catch {
+      // keep current
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWithdrawals();
+  }, [fetchWithdrawals]);
 
   // Extract method and reference ID from description
   const parseWithdrawalInfo = (description: string) => {
@@ -52,40 +62,18 @@ export default function WithdrawPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-3 pb-12">
-      {/* Account Balance Card */}
-      <section className="bg-white rounded-lg px-8 py-10">
-        <div className="flex justify-between items-start mb-2">
-          <span className="tracking-tight font-light text-gray-900">Available Balance</span>
-          <div className="flex flex-col items-end">
-            <button className="flex items-center gap-2 border border-gray-200 rounded-full px-4 py-1.5 text-sm font-bold text-gray-700 hover:bg-gray-50">
-              USD <ChevronDown size={16} />
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center mt-4 justify-between gap-2">
-          <div className="text-5xl font-bold text-[#1e272e] mb-6">
-            <span className="text-2xl">$</span>
-            {availableBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </div>
-          <div className="text-xs text-gray-500 font-light">
-            Last update at {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}, {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'numeric', year: 'numeric' })}
-          </div>
-        </div>
-        <div className="w-full bg-gray-200 h-2.5 rounded-full mb-8"></div>
-
-        <button
-          onClick={() => setIsWithdrawalModalOpen(true)}
-          className="flex items-center gap-2 border border-[#46b445] text-[#46b445] font-bold py-2 px-4 rounded-full text-sm hover:bg-green-50 transition-colors"
-        >
-          <Minus size={18} /> Withdraw Funds
-        </button>
-      </section>
+      <AvailableBalanceCard
+        title="Available Balance"
+        actionLabel="Withdraw Funds"
+        actionIcon={Minus}
+        onAction={() => setIsWithdrawalModalOpen(true)}
+      />
 
       {/* Withdrawal Modal */}
       <WithdrawalModal
         isOpen={isWithdrawalModalOpen}
         onClose={() => setIsWithdrawalModalOpen(false)}
+        onSuccess={fetchWithdrawals}
       />
 
       {/* Recent Withdrawals Table */}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, Bitcoin, Coins, CheckCircle2, Copy, FileText } from 'lucide-react';
+import { X, Bitcoin, Coins, CheckCircle2, Copy, FileText, Loader2 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 
 interface DepositFundsModalProps {
@@ -31,6 +31,7 @@ type Step = 1 | 2 | 3;
 
 export const DepositFundsModal: React.FC<DepositFundsModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<Step>(1);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string>('100');
   const [selectedMethod, setSelectedMethod] = useState<CryptoMethod>('BTC');
   const [txHash, setTxHash] = useState<string>('');
@@ -49,28 +50,36 @@ export const DepositFundsModal: React.FC<DepositFundsModalProps> = ({ isOpen, on
   }, [amount, selectedMethod, walletInfo.address]);
 
   const handleClose = () => {
-    // Reset state when closing to start fresh next time
     setStep(1);
     setAmount('100');
     setSelectedMethod('BTC');
     setTxHash('');
     setProofFileName('');
+    setLoading(false);
     onClose();
   };
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
     const numericAmount = parseFloat(amount);
-    if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
-      return;
+    if (!amount || isNaN(numericAmount) || numericAmount <= 0) return;
+    setLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1000));
+      setStep(2);
+    } finally {
+      setLoading(false);
     }
-    setStep(2);
   };
 
-  const handleSubmit = () => {
-    if (!txHash && !proofFileName) {
-      return;
+  const handleSubmit = async () => {
+    if (!txHash && !proofFileName) return;
+    setLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1200));
+      setStep(3);
+    } finally {
+      setLoading(false);
     }
-    setStep(3);
   };
 
   const handleCopyAddress = async () => {
@@ -289,18 +298,22 @@ export const DepositFundsModal: React.FC<DepositFundsModalProps> = ({ isOpen, on
             <button
               type="button"
               onClick={handleProceed}
-              className="px-20 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
+              disabled={loading}
+              className="px-20 bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
             >
-              Continue
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+              {loading ? 'Processing...' : 'Continue'}
             </button>
           )}
           {step === 2 && (
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-20 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
+              disabled={loading}
+              className="px-20 bg-green-600 hover:bg-green-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
             >
-              Submit deposit
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+              {loading ? 'Submitting...' : 'Submit deposit'}
             </button>
           )}
           {step === 3 && (

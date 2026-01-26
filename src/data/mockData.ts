@@ -1,4 +1,4 @@
-import type { MarketData, CopyTrader, AcademyCourse, NewsArticle, Position, Review, TradeHistory } from '@/lib/types'
+import type { MarketData, AcademyCourse, NewsArticle, Position } from '@/lib/types'
 
 // Market data generators
 export function generateMockMarketData(symbol: string, name: string, type: MarketData['type']): MarketData {
@@ -93,76 +93,6 @@ export function generateMockCurrencies(): MarketData[] {
   ]
 
   return currencies.map(currency => generateMockMarketData(currency.symbol, currency.name, 'currency'))
-}
-
-// CopyTrader data generator
-export function generateMockCopyTraders(): CopyTrader[] {
-  const traders = [
-    {
-      username: 'ESDRASVasquez',
-      bio: '5+ years of experience in tech stocks and growth investing. Focus on long-term value creation.',
-      country: 'USA',
-      yearlyGain: 52.48,
-    },
-    {
-      username: 'JeppeKirkBonde',
-      bio: 'Specializing in cryptocurrencies and blockchain projects. Active trader with strong technical analysis skills.',
-      country: 'UK',
-      yearlyGain: 34.21,
-    },
-    {
-      username: 'CPHequities',
-      bio: 'Low-risk dividend and blue-chip stock investor. Conservative approach with steady returns.',
-      country: 'Germany',
-      yearlyGain: 28.93,
-    },
-    {
-      username: 'Wesl3y',
-      bio: 'Technical analysis based swing trading. Focus on short to medium-term opportunities.',
-      country: 'Australia',
-      yearlyGain: 41.67,
-    },
-    {
-      username: 'Rubymza',
-      bio: 'Macroeconomic analysis and international markets. Diversified portfolio approach.',
-      country: 'Singapore',
-      yearlyGain: 36.52,
-    },
-    {
-      username: 'BalanceInvesting',
-      bio: 'Balanced portfolio management with focus on risk-adjusted returns and diversification.',
-      country: 'USA',
-      yearlyGain: 31.84,
-    },
-  ]
-
-  return traders.map((trader, index) => ({
-    id: (index + 1).toString(),
-    username: trader.username,
-    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${trader.username}`,
-    verified: index < 3, // First 3 are verified
-    followers: Math.floor(Math.random() * 50000) + 1000,
-    copiers: Math.floor(Math.random() * 1000) + 100,
-    copiedPortfolios: Math.floor(Math.random() * 500) + 50,
-    weeklyGain: (Math.random() - 0.2) * 20, // -2% to +18%
-    yearlyGain: trader.yearlyGain || (Math.random() - 0.1) * 100, // Use provided return or random
-    riskScore: Math.floor(Math.random() * 10) + 1,
-    minCopyAmount: Math.floor(Math.random() * 900) + 100,
-    bio: trader.bio,
-    stats: {
-      winRate: Math.random() * 40 + 60, // 60% to 100%
-      avgProfit: Math.random() * 50 + 5, // 5% to 55%
-      profitFactor: Math.random() * 2 + 1.2, // 1.2 to 3.2
-      maxDrawdown: Math.random() * 30 + 5, // 5% to 35%
-      trades: Math.floor(Math.random() * 1000) + 100,
-      daysActive: Math.floor(Math.random() * 1000) + 100,
-    },
-    recentActivity: Array.from({ length: 5 }, (_, i) => ({
-      symbol: ['AAPL', 'BTC', 'ETH', 'GOOGL', 'MSFT'][Math.floor(Math.random() * 5)],
-      action: Math.random() > 0.5 ? 'buy' : 'sell',
-      timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
-    })),
-  }))
 }
 
 // Academy courses generator
@@ -282,66 +212,4 @@ export function generateMockPositions(): Position[] {
       status: 'open' as const,
     }
   })
-}
-
-// Reviews generator
-export function generateMockReviews(traderId: string): Review[] {
-  const comments = [
-    'Great trader! I\'ve been copying for 3 months and seeing consistent returns.',
-    'Very professional approach. The risk management is excellent.',
-    'One of the best traders I\'ve copied. Highly recommended!',
-    'Good performance but sometimes takes too many risks.',
-    'Solid returns over the past year. Will continue copying.',
-    'The trader is responsive and shares good insights.',
-    'Not the best performance recently, but still learning.',
-    'Excellent win rate and consistent profits.',
-    'I appreciate the transparency in trading decisions.',
-    'Good for beginners looking to learn from experienced traders.',
-  ]
-
-  const usernames = [
-    'TraderJohn', 'CryptoQueen', 'InvestorMike', 'StockGuru', 'MarketMaster',
-    'TradingPro', 'FinanceFan', 'PortfolioKing', 'WealthBuilder', 'SmartInvestor',
-  ]
-
-  return Array.from({ length: Math.floor(Math.random() * 8) + 5 }, (_, index) => {
-    const username = usernames[index % usernames.length]
-    return {
-      id: `${traderId}-review-${index + 1}`,
-      userId: `user-${index + 1}`,
-      username,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
-      rating: Math.floor(Math.random() * 2) + 4, // 4-5 stars mostly, occasional 3
-      comment: comments[index % comments.length],
-      timestamp: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
-      helpful: Math.floor(Math.random() * 20),
-    }
-  })
-}
-
-// Trade history generator
-export function generateMockTradeHistory(traderId: string): TradeHistory[] {
-  const symbols = ['AAPL', 'GOOGL', 'MSFT', 'BTC', 'ETH', 'TSLA', 'AMZN', 'NVDA', 'META', 'NFLX']
-  const actions: ('buy' | 'sell')[] = ['buy', 'sell']
-  
-  return Array.from({ length: 30 }, (_, index) => {
-    const symbol = symbols[Math.floor(Math.random() * symbols.length)]
-    const action = actions[Math.floor(Math.random() * actions.length)]
-    const amount = Math.random() * 100 + 1
-    const price = Math.random() * 500 + 50
-    const totalValue = amount * price
-    const status: TradeHistory['status'] =
-      Math.random() > 0.1 ? 'completed' : (Math.random() > 0.5 ? 'pending' : 'cancelled')
-
-    return {
-      id: `${traderId}-trade-${index + 1}`,
-      symbol,
-      action,
-      amount: Math.round(amount * 100) / 100,
-      price: Math.round(price * 100) / 100,
-      totalValue: Math.round(totalValue * 100) / 100,
-      timestamp: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toISOString(),
-      status,
-    }
-  }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }

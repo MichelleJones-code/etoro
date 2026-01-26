@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { X, Landmark, Wallet as WalletIcon, Coins, CheckCircle2, Copy } from 'lucide-react';
-import { useMarketStore } from '@/lib/stores/market';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { X, Landmark, Wallet as WalletIcon, Coins, CheckCircle2, Copy, Loader2 } from 'lucide-react';
+import { apiFetch } from '@/lib/api/client';
 
 interface WithdrawalModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 type WithdrawalMethod = 'bank' | 'paypal' | 'crypto';
@@ -13,8 +16,9 @@ type Step = 1 | 2 | 3;
 
 const CRYPTO_NETWORKS = ['Bitcoin', 'Ethereum (ERC20)', 'Tron (TRC20)'];
 
-export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose }) => {
+export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [step, setStep] = useState<Step>(1);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string>('');
   const [selectedMethod, setSelectedMethod] = useState<WithdrawalMethod>('bank');
   
@@ -31,11 +35,26 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
   const [cryptoNetwork, setCryptoNetwork] = useState<string>('Bitcoin');
   
   const [referenceId, setReferenceId] = useState<string>('');
-  const processWithdrawal = useMarketStore((state) => state.processWithdrawal);
-  const availableBalance = useMarketStore((state) => state.portfolio.availableBalance);
+  const [availableBalance, setAvailableBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    (async () => {
+      setAvailableBalance(null);
+      try {
+        const { data, res } = await apiFetch<{ availableBalance?: number } | { error?: string }>('/api/wallet');
+        if (!cancelled && res.ok && typeof (data as { availableBalance?: number }).availableBalance === 'number') {
+          setAvailableBalance((data as { availableBalance: number }).availableBalance);
+        }
+      } catch {
+        if (!cancelled) setAvailableBalance(0);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [isOpen]);
 
   const handleClose = () => {
-    // Reset state when closing
     setStep(1);
     setAmount('');
     setSelectedMethod('bank');
@@ -46,23 +65,28 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
     setCryptoAddress('');
     setCryptoNetwork('Bitcoin');
     setReferenceId('');
+    setLoading(false);
     onClose();
   };
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
     const numericAmount = parseFloat(amount || '0');
-    if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
-      return;
-    }
-    if (numericAmount > availableBalance) {
+    if (!amount || isNaN(numericAmount) || numericAmount <= 0) return;
+    const balance = availableBalance ?? 0;
+    if (numericAmount > balance) {
       alert('Insufficient balance');
       return;
     }
-    setStep(2);
+    setLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1000));
+      setStep(2);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSubmit = () => {
-    // Validate method-specific fields
+  const handleSubmit = async () => {
     if (selectedMethod === 'bank') {
       if (!accountNumber || !routingNumber || !accountHolderName) {
         alert('Please fill in all bank transfer details');
@@ -80,33 +104,43 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
       }
     }
 
-    try {
-      const numericAmount = parseFloat(amount || '0');
-      const methodLabel = selectedMethod === 'bank' ? 'Bank Transfer' : selectedMethod === 'paypal' ? 'PayPal' : 'Crypto';
-      
-      const details: Record<string, string> = {};
-      if (selectedMethod === 'bank') {
-        details.accountNumber = accountNumber;
-        details.routingNumber = routingNumber;
-        details.accountHolderName = accountHolderName;
-      } else if (selectedMethod === 'paypal') {
-        details.email = paypalEmail;
-      } else if (selectedMethod === 'crypto') {
-        details.address = cryptoAddress;
-        details.network = cryptoNetwork;
-      }
+    const numericAmount = parseFloat(amount || '0');
+    const methodLabel = selectedMethod === 'bank' ? 'Bank Transfer' : selectedMethod === 'paypal' ? 'PayPal' : 'Crypto';
+    const details: Record<string, string> = {};
+    if (selectedMethod === 'bank') {
+      details.accountNumber = accountNumber;
+      details.routingNumber = routingNumber;
+      details.accountHolderName = accountHolderName;
+    } else if (selectedMethod === 'paypal') {
+      details.email = paypalEmail;
+    } else if (selectedMethod === 'crypto') {
+      details.address = cryptoAddress;
+      details.network = cryptoNetwork;
+    }
 
-      const transaction = processWithdrawal(numericAmount, methodLabel, details);
-      
-      // Extract reference ID from description
-      const refMatch = transaction.description.match(/Ref: (WD-\d+)/);
-      if (refMatch) {
-        setReferenceId(refMatch[1]);
+    setLoading(true);
+    try {
+      const { data, res } = await apiFetch<{ transaction?: { referenceId?: string; description?: string } } | { error?: string }>(
+        '/api/wallet/withdraw',
+        { method: 'POST', body: { amount: numericAmount, method: methodLabel, details } }
+      );
+      if (!res.ok) {
+        const err = (data as { error?: string }).error ?? 'Failed to process withdrawal';
+        alert(err);
+        return;
       }
-      
+      const tx = (data as { transaction?: { referenceId?: string; description?: string } }).transaction;
+      if (tx?.referenceId) setReferenceId(tx.referenceId);
+      else if (tx?.description) {
+        const refMatch = tx.description.match(/Ref: (WD-\d+)/);
+        if (refMatch) setReferenceId(refMatch[1]);
+      }
+      onSuccess?.();
       setStep(3);
-    } catch (error: any) {
-      alert(error.message || 'Failed to process withdrawal');
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : 'Failed to process withdrawal');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,11 +186,12 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <p className="text-gray-500 font-light tracking-tight">
-                    Available balance: <span className="font-semibold text-gray-900">${availableBalance.toFixed(2)}</span>
+                    Available balance: <span className="font-semibold text-gray-900">{availableBalance != null ? `$${availableBalance.toFixed(2)}` : '—'}</span>
                   </p>
                   <button
-                    onClick={() => setAmount(availableBalance.toFixed(2))}
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                    onClick={() => availableBalance != null && setAmount(availableBalance.toFixed(2))}
+                    disabled={availableBalance == null}
+                    className="text-blue-600 hover:text-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Withdraw all
                   </button>
@@ -351,9 +386,11 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
             <button
               type="button"
               onClick={handleProceed}
-              className="px-20 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
+              disabled={loading}
+              className="px-20 bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
             >
-              Continue
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+              {loading ? 'Processing...' : 'Continue'}
             </button>
           )}
           {step === 2 && (
@@ -361,16 +398,19 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClos
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-8 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-3 rounded-full transition-colors text-base"
+                disabled={loading}
+                className="px-8 bg-gray-200 hover:bg-gray-300 disabled:opacity-70 disabled:cursor-not-allowed text-gray-900 font-semibold py-3 rounded-full transition-colors text-base"
               >
                 Back
               </button>
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="px-20 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
+                disabled={loading}
+                className="px-20 bg-green-600 hover:bg-green-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2 text-base"
               >
-                Submit Withdrawal
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+                {loading ? 'Submitting...' : 'Submit Withdrawal'}
               </button>
             </div>
           )}

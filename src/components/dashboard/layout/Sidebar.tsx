@@ -10,7 +10,9 @@ import {
   PieChart,
   Search,
   Wallet,
-  X
+  X,
+  TrendingUp,
+  Minus
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { DepositFundsModal } from '@/components/dashboard/sections/DepositFundsModal';
@@ -142,7 +144,7 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const sidebarRef = useRef<HTMLElement>(null);
 
   const toggleCollapse = () => {
@@ -151,8 +153,12 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
 
   const handleLogout = () => {
     logout();
-    router.push('/dashboard/login');
+    router.push('/auth/login');
   };
+
+  const displayName = user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username ?? 'User';
+  const avatarSrc = user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username || user?.id || 'default'}`;
+  const kycPercent = user?.kycStatus === 'approved' ? 100 : user?.kycStatus === 'pending' ? 50 : 33;
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -202,7 +208,7 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
       <aside 
         ref={sidebarRef}
         className={`
-          bg-[#1e272e] text-white h-screen flex flex-col shrink-0 transition-all duration-300 ease-in-out
+          bg-[#1e272e] text-white h-full flex flex-col shrink-0 transition-all duration-300 ease-in-out
           ${isCollapsed ? 'w-16' : 'w-[350px]'}
           ${isMobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 lg:relative lg:inset-auto' : 'hidden lg:flex'}
         `}
@@ -249,7 +255,7 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
       </div>
 
       {/* Primary Navigation */}
-      <div className="relative h-[70%] overflow-hidden flex-1">
+      <div className="relative min-h-0 overflow-hidden flex-1">
         {/* Top fade overlay - fixed at top */}
         <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-[#1e272e] to-transparent z-10 pointer-events-none" />
         
@@ -262,6 +268,8 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
               <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} onClick={handleNavClick} />
               <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} onClick={handleNavClick} />
               <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} onClick={handleNavClick} />
+              <NavItem label="Withdraw" href="/dashboard/withdraw" active={isActive('/dashboard/withdraw')} collapsed={isCollapsed} icon={Minus} onClick={handleNavClick} />
+              <NavItem label="Investment" href="/dashboard/investment" active={isActive('/dashboard/investment')} collapsed={isCollapsed} icon={TrendingUp} onClick={handleNavClick} />
               <NavItem label="CopyTrader" href="/dashboard/discover" active={isActive('/dashboard/discover/copytrader')} badge="New" variant="secondary" icon={Users} collapsed={isCollapsed} onClick={handleNavClick} />
               <NavItem label="Settings" href="/dashboard/settings" active={isActive('/dashboard/settings')} variant="secondary" icon={Settings} collapsed={isCollapsed} onClick={handleNavClick} />
               <NavItem label="Logout" onClick={() => { handleLogout(); handleNavClick(); }} variant="secondary" icon={LogOut} collapsed={isCollapsed} />
@@ -277,24 +285,24 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-13 rounded-sm overflow-hidden bg-gray-600 border border-gray-500">
                   <img 
-                    src="/dash/us.png" 
-                    alt="Roy Banks" 
+                    src={avatarSrc} 
+                    alt={displayName} 
                     className="w-full"
                   />
                 </div>
-                <span className="font-semibold text-lg tracking-tight text-white">David weaver</span>
+                <span className="font-semibold text-lg tracking-tight text-white">{displayName}</span>
               </div>
               
               <div className="space-y-1.5 pt-4">
                 <div className="flex justify-between font-light tracking-tight text-sm ">
-                  <span>70% Complete</span>
+                  <span>{kycPercent}% Complete</span>
                 </div>
                 <div className="w-full bg-zinc-900 h-[2.5px] rounded-full overflow-hidden">
-                  <div className="bg-[#4ba3f5] h-full w-[70%]"></div>
+                  <div className="bg-[#4ba3f5] h-full" style={{ width: `${kycPercent}%` }}></div>
                 </div>
-                <button className="font-extralight">
+                <Link href="/dashboard/kyc" className="font-extralight block">
                   Complete Profile
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -303,6 +311,8 @@ export const Sidebar = ({ isMobileMenuOpen = false, setIsMobileMenuOpen }: Sideb
             <NavItem label="Portfolio" href="/dashboard/portfolio" active={isActive('/dashboard/portfolio')} collapsed={isCollapsed} icon={PieChart} onClick={handleNavClick} />
             <NavItem label="Discover" href="/dashboard/discover" active={isActive('/dashboard/discover')} collapsed={isCollapsed} icon={Search} onClick={handleNavClick} />
             <NavItem label="Wallet" href="/dashboard/wallet" active={isActive('/dashboard/wallet')} collapsed={isCollapsed} icon={Wallet} onClick={handleNavClick} />
+            <NavItem label="Withdraw" href="/dashboard/withdraw" active={isActive('/dashboard/withdraw')} collapsed={isCollapsed} icon={Minus} onClick={handleNavClick} />
+            <NavItem label="Investment" href="/dashboard/investment" active={isActive('/dashboard/investment')} collapsed={isCollapsed} icon={TrendingUp} onClick={handleNavClick} />
             
             {/* Section Heading */}
             <div className={`mt-8 px-8 pb-2 text-gray-500 tracking-tight transition-all duration-300 ease-in-out ${
